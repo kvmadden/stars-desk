@@ -2,7 +2,7 @@
 // (data/cms/star-ratings-2027-partd.json, trimmed from cms.gov by scripts/cms-derive.mjs).
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { ALL_MEASURES } from '../src/engine/measures.js';
+import { ALL_MEASURES, ADHERENCE } from '../src/engine/measures.js';
 import { starCheck, oneAwaySummary, measureSummary, pointsToNextStar } from '../src/engine/market.js';
 
 const root = new URL('..', import.meta.url).pathname;
@@ -75,4 +75,21 @@ describe('one point from the next star', () => {
     expect(plans).toBeGreaterThan(500);
     expect(readme).toContain(`${oneAway} of ${plans}`);
   });
+});
+
+describe("drug lists against PQA's value sets", () => {
+  // scripts/cms-derive.mjs checks the desk's lists against the PQA value sets CMS ships in the same zip
+  // and keeps only the result. A list changed without rerunning it fails here too.
+  for (const id of ['D08', 'D09', 'D10']) {
+    it(`${id}: every drug the desk counts is on PQA's list`, () => {
+      expect(cms.pqa.measures[id].desk).toEqual([...ADHERENCE[id].ingredients].sort());
+      expect(cms.pqa.measures[id].missing).toEqual([]);
+    });
+  }
+  for (const id of ['D08', 'D09']) {
+    it(`${id}: each exclusion is on PQA's exclusion list`, () => {
+      expect(cms.pqa.exclusions[id].desk).toEqual([...ADHERENCE[id].excludingIngredients].sort());
+      expect(cms.pqa.exclusions[id].missing).toEqual([]);
+    });
+  }
 });

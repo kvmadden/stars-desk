@@ -45,6 +45,10 @@ Zip: https://www.cms.gov/files/zip/2026-star-ratings-data-tables.zip (SHA-256 a7
 - Scores are whole percents, and CMS assigns stars from them. The desk's star logic gives CMS's published star on 3,320 of 3,336 MA-PD contract scores across the six measures.
 - The other 16 are all D08 scores at contracts with at least 25% of members in 2025 disaster areas. Under the extreme and uncontrollable circumstances policy, those contracts receive the higher of their 2026 or 2027 measure star (Technical Notes, page 9), and in all 16 the published star is the 2026 one.
 
+## Drug lists
+
+PQA, *Value Sets for Adherence Measures*, measurement year 2025, published April 30, 2026, shipped inside the CMS 2027 data tables zip as `PQA_Value_Sets_ADH_YOS2025_Apr_2026.xlsx`. `scripts/cms-derive.mjs` checks every ingredient in `src/engine/measures.js` against the diabetes, RAS antagonist and statin sets, and the insulin and sacubitril/valsartan exclusion sets, by ingredient name. All 29 ingredients and both exclusions are on their lists. The value sets belong to PQA, so the repo keeps only the result of the check, not the lists.
+
 ## Part D benefit, 2026
 
 CMS, *Final CY 2026 Part D Redesign Program Instructions*: the 2026 annual out-of-pocket threshold is $2,100 and the maximum deductible is $615.

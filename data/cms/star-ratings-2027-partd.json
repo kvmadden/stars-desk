@@ -144,6 +144,74 @@
    }
   }
  },
+ "pqa": {
+  "title": "PQA Value Sets for Adherence Measures, shipped in the 2027 data tables zip",
+  "file": "PQA_Value_Sets_ADH_YOS2025_Apr_2026.xlsx",
+  "published": "4/30/2026",
+  "note": "Checked when this file was made. Only the result is kept, since the value sets belong to PQA.",
+  "measures": {
+   "D08": {
+    "desk": [
+     "dapagliflozin",
+     "dulaglutide",
+     "empagliflozin",
+     "glimepiride",
+     "glipizide",
+     "linagliptin",
+     "metformin",
+     "pioglitazone",
+     "repaglinide",
+     "semaglutide",
+     "sitagliptin",
+     "tirzepatide"
+    ],
+    "missing": []
+   },
+   "D09": {
+    "desk": [
+     "aliskiren",
+     "benazepril",
+     "candesartan",
+     "enalapril",
+     "irbesartan",
+     "lisinopril",
+     "losartan",
+     "olmesartan",
+     "ramipril",
+     "telmisartan",
+     "valsartan"
+    ],
+    "missing": []
+   },
+   "D10": {
+    "desk": [
+     "atorvastatin",
+     "lovastatin",
+     "pitavastatin",
+     "pravastatin",
+     "rosuvastatin",
+     "simvastatin"
+    ],
+    "missing": []
+   }
+  },
+  "exclusions": {
+   "D08": {
+    "desk": [
+     "insulin aspart",
+     "insulin glargine",
+     "insulin lispro"
+    ],
+    "missing": []
+   },
+   "D09": {
+    "desk": [
+     "sacubitril"
+    ],
+    "missing": []
+   }
+  }
+ },
  "contracts": [
  {"id":"E3014","org":"PDP","disaster2025":0,"score":[89,90,89,87,12,6],"star":[3,4,3,5,3,3],"star2026":[4,4,3,5,null,null]},
  {"id":"H0028","org":"MA-PD","disaster2025":4,"score":[90,91,91,90,9,4],"star":[3,4,4,4,4,5],"star2026":[3,3,3,4,null,null]},

@@ -24,6 +24,7 @@ The members and claims are a synthetic plan of 6,000 members. No real member or 
 
 - **PDC math.** Same-ingredient overlapping fills shift forward, different ingredients do not, and inpatient and SNF stay days leave both sides. The engine matches the worked examples in CMS's Attachment L (`tests/pdc.test.js`).
 - **Measure rules.** Denominators, exclusions, cut points, rounding and weights follow the CMS 2027 Technical Notes. Every rule is cited in [docs/SOURCES.md](docs/SOURCES.md).
+- **Drug lists.** Every drug the desk counts for diabetes, blood pressure and statins is on PQA's value set for that measure, and both exclusions (insulin, sacubitril/valsartan) are on PQA's exclusion sets. The check runs against the April 2026 value sets CMS ships with the ratings and keeps only the result, since the lists are PQA's.
 - **Against real plans.** The desk's cut points match CMS's 2027 cut point file on all six measures. Its star logic gives the star CMS published on 3,320 of 3,336 real plan scores. The other 16 are plans CMS kept at their higher 2026 star because at least a quarter of their members lived in 2025 disaster areas (`tests/market.test.js`).
 - **No peeking.** The desk reads only claims a plan would have on October 1. A test reruns every member of a test plan with later claims removed and gets identical output.
 - **Member letters** stay at or below a sixth grade reading level, and a transition fill is promised only where the federal rule requires one.

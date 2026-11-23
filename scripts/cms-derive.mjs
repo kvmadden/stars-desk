@@ -8,6 +8,7 @@ import { mkdtempSync, readFileSync, writeFileSync, mkdirSync, readdirSync, statS
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { ADHERENCE } from '../src/engine/measures.js';
 
 const PAGE = 'https://www.cms.gov/medicare/health-drug-plans/part-c-d-performance-data';
 const ZIPS = {
@@ -90,6 +91,45 @@ export function parseCutPoints(rows) {
   return out;
 }
 
+// One column of one sheet in an .xlsx file, read with the unzip command. No library needed.
+function xlsxColumn(file, sheetName, col) {
+  const unz = (member) => execFileSync('unzip', ['-p', file, member], { maxBuffer: 1 << 28 }).toString('utf8');
+  const decode = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+  const sheetTag = [...unz('xl/workbook.xml').matchAll(/<sheet\b[^>]*>/g)].map((m) => m[0]).find((tag) => tag.includes(`name="${sheetName}"`));
+  if (!sheetTag) throw new Error(`no sheet ${sheetName}`);
+  const rid = /r:id="([^"]+)"/.exec(sheetTag)[1];
+  const rel = [...unz('xl/_rels/workbook.xml.rels').matchAll(/<Relationship\b[^>]*>/g)].map((m) => m[0]).find((tag) => tag.includes(`Id="${rid}"`));
+  const target = /Target="([^"]+)"/.exec(rel)[1].replace(/^\/?xl\//, '');
+  const shared = [...unz('xl/sharedStrings.xml').matchAll(/<si>([\s\S]*?)<\/si>/g)].map((m) => decode([...m[1].matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map((x) => x[1]).join('')));
+  const out = [];
+  for (const m of unz(`xl/${target}`).matchAll(/<c r="([A-Z]+)(\d+)"([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
+    if (m[1] !== col || m[2] === '1') continue;
+    const type = /t="(\w+)"/.exec(m[3])?.[1];
+    const v = /<v>([\s\S]*?)<\/v>/.exec(m[4] || '')?.[1];
+    const inline = /<is>[\s\S]*?<t[^>]*>([\s\S]*?)<\/t>/.exec(m[4] || '')?.[1];
+    out.push(type === 's' ? shared[Number(v)] : type === 'inlineStr' ? decode(inline || '') : v);
+  }
+  return out.filter(Boolean).map((s) => s.trim());
+}
+
+// Is every ingredient the desk counts on PQA's value set for its measure, and is each exclusion on
+// PQA's exclusion set? The value sets are PQA's, so only the result is kept, never the lists.
+function pqaCheck(file) {
+  const items = (sheet) => new Set(xlsxColumn(file, sheet, 'C').map((s) => s.toLowerCase()));
+  const has = (set, name) => [...set].some((it) => it === name || it.replace(/-/g, ' ') === name || it.split('/').includes(name));
+  const check = (names, set) => ({ desk: [...names].sort(), missing: names.filter((n) => !has(set, n)) });
+  const sets = { D08: items('NDC Diabetes'), D09: items('NDC RASA'), D10: items('NDC Statins') };
+  const exclusions = { D08: items('NDC Insulins'), D09: items('NDC Sacubitril_Valsartan') };
+  return {
+    measures: Object.fromEntries(Object.entries(sets).map(([id, set]) => [id, check(ADHERENCE[id].ingredients, set)])),
+    exclusions: Object.fromEntries(Object.entries(exclusions).map(([id, set]) => [id, check(ADHERENCE[id].excludingIngredients, set)])),
+  };
+}
+
+function findFile(dir, pattern) {
+  return findCsv(dir, pattern);
+}
+
 function findCsv(dir, pattern) {
   const walk = (d) => readdirSync(d).flatMap((n) => {
     const p = join(d, n);
@@ -146,6 +186,8 @@ export function derive(currentDir, priorDir) {
     };
   });
   const fileName = (f) => f.split('/').pop();
+  const pqaFile = findFile(currentDir, /PQA_Value_Sets_ADH_.*\.xlsx$/);
+  const published = xlsxColumn(pqaFile, 'Summary', 'B').map((s) => /Date Published: (\S+)/.exec(s)?.[1]).find(Boolean) || null;
   return {
     note: 'Trimmed from CMS public Star Ratings data tables: contract ID, the six Part D measures the desk uses, the 2025 disaster share and 2026 stars. No plan names. Regenerate with npm run cms.',
     page: PAGE,
@@ -155,6 +197,13 @@ export function derive(currentDir, priorDir) {
     ],
     measures: MEASURE_IDS,
     cutPoints: parseCutPoints(read(files.cuts)),
+    pqa: {
+      title: 'PQA Value Sets for Adherence Measures, shipped in the 2027 data tables zip',
+      file: fileName(pqaFile),
+      published,
+      note: 'Checked when this file was made. Only the result is kept, since the value sets belong to PQA.',
+      ...pqaCheck(pqaFile),
+    },
     contracts,
   };
 }

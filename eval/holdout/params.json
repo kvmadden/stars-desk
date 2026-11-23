@@ -1,0 +1,22 @@
+{
+  "name": "holdout",
+  "members": 6000,
+  "archetypes": { "steady": 0.61, "forgetful": 0.08, "cost": 0.1, "sideEffect": 0.06, "logistics": 0.11, "switched": 0.04 },
+  "prevalence": { "D10": 0.66, "D09": 0.58, "D08": 0.37 },
+  "newStart": 0.16,
+  "ninetyDay": 0.56,
+  "mailGivenNinety": 0.65,
+  "stay": 0.08,
+  "hospice": 0.017,
+  "esrd": 0.014,
+  "sacubitril": 0.045,
+  "late": {
+    "steady": { "mean": 0.5, "sd": 3 },
+    "forgetful": { "mean": 6 },
+    "cost": { "mean": 10, "skip": 0.18 },
+    "logistics": { "mean": 5, "spike": 0.26, "spikeMean": 11 }
+  },
+  "quitAfterMax": 5,
+  "noise": { "steadyMultiPharmacy": 0.16, "steadyLate": 0.18, "costOnLowTier": 0.38 },
+  "safety": { "opioid": 0.065, "benzoGivenOpioid": 0.18, "achGiven65": 0.17, "secondAch": 0.25, "noStatinGivenDiabetes": 0.26 }
+}

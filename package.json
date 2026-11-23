@@ -1,0 +1,25 @@
+{
+  "name": "stars-desk",
+  "private": true,
+  "license": "MIT",
+  "version": "0.1.0",
+  "description": "A Part D Stars pharmacist's desk on synthetic data: cut point view, adherence save list, safety measure gaps and formulary change risk.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "data": "node scripts/build-data.mjs",
+    "eval": "node eval/run-eval.mjs",
+    "build": "node scripts/build-data.mjs && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}

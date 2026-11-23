@@ -3,3 +3,5 @@ dist
 .vercel
 .claude
 .env*
+public/data
+eval/results/*.log

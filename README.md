@@ -4,6 +4,8 @@ A Part D Stars pharmacist's desk. It answers one question for a Medicare Advanta
 
 Everything runs on a synthetic plan of 6,000 members. No real member, claim or plan data is used. Measure rules, weights and cut points come from the CMS 2027 Star Ratings Technical Notes ([docs/SOURCES.md](docs/SOURCES.md)).
 
+![The plan view: which measure is closest to the next star, and where the 6,000 members stand](docs/img/plan.png)
+
 ## What it does
 
 - **Plan.** Forecasts where each Part D measure lands on December 31 and how many saves separate it from the next star, against the latest published cut points (2027 Star Ratings, standing in for the 2028 ratings that 2026 data feeds).
@@ -13,6 +15,8 @@ Everything runs on a synthetic plan of 6,000 members. No real member, claim or p
 - **January changes.** Members hit by the plan's 2027 formulary changes, who has no room for a gap, a pharmacist switch note for the prescriber and a member letter held to a sixth grade reading level.
 
 ## How well it works
+
+![Call list with one member's coverage, gap budget, barrier and fix](docs/img/call-list.png)
 
 Scored by playing October 1 to December 31 forward on each plan, with and without 500 member calls, and counting members who finished at or above 80% because of a call. Per 100 calls:
 

@@ -31,12 +31,12 @@ function MeasureCard({ row, asOf }) {
           {row.drug} {row.strength} · {row.ds}-day
           {row.copay30 ? ` · $${row.copay30} a month` : ''}
         </span>
-        <Chip tone={tone}>{row.lane === 'save' ? 'Call' : LANES.find((l) => l.key === row.lane)?.label || row.lane}</Chip>
+        <span className={`tag ${tone}`}>{row.lane === 'save' ? 'On the call' : LANES.find((l) => l.key === row.lane)?.label || row.lane}</span>
       </header>
       {row.segments.length > 0 && <CoverageStrip row={row} asOf={asOf} />}
       {row.pdc != null && (
         <p className="math">
-          Needs <b>{row.needCovered}</b> covered days of {row.periodDays}. Has <b>{row.covered}</b> so far ({pct(row.pdc)}).{' '}
+          From the first fill on {dayLabel(row.ipsd)}, needs <b>{row.needCovered}</b> covered days of {row.periodDays}. Has <b>{row.covered}</b> so far ({pct(row.pdc)}).{' '}
           {row.budget >= 0 ? <>Can miss <b>{row.budget}</b> more.</> : <>Already <b>{-row.budget}</b> days short.</>}
         </p>
       )}
@@ -66,7 +66,30 @@ function MeasureCard({ row, asOf }) {
   );
 }
 
+// Days until the member's earliest last-day-to-refill: the real urgency, and the list's sort order.
+const spareDays = (m, asOf) => (m.callBy == null ? '' : Math.max(0, m.callBy - asOf));
+
+const OUTCOMES = ['Reached, fix agreed', 'Reached, declined', 'Left a message', 'Wrong number'];
+
+function LogCall({ id, logged, setLogged }) {
+  const [open, setOpen] = useState(false);
+  if (logged[id]) return <p className="logged"><span className="tag teal">Logged</span> {logged[id]}</p>;
+  return (
+    <div className="logwrap">
+      <button className="primary" onClick={() => setOpen(!open)} aria-expanded={open}>Log call outcome</button>
+      {open && (
+        <div className="choices" role="group" aria-label="Call outcome">
+          {OUTCOMES.map((o) => (
+            <button key={o} className="pill" onClick={() => { setLogged({ ...logged, [id]: o }); setOpen(false); }}>{o}</button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function SaveList({ data, params, go }) {
+  const [logged, setLogged] = useState({});
   const [lane, setLane] = useState(params.get('lane') || 'save');
   useEffect(() => setLane(params.get('lane') || 'save'), [params.get('lane')]);
   const measure = params.get('measure');
@@ -85,12 +108,12 @@ export default function SaveList({ data, params, go }) {
     <div className="page list">
       <div className="listhead">
         <div>
-          <h1 className="h2">{lane === 'save' ? `${rows.length} calls, soonest deadline first` : LANES.find((l) => l.key === lane)?.label}</h1>
+          <h1 className="h2">{lane === 'save' ? `${rows.length} calls, least time to spare first` : LANES.find((l) => l.key === lane)?.label}</h1>
           <p className="sub">{LANES.find((l) => l.key === lane)?.hint}</p>
         </div>
-        <div className="lanes" role="tablist">
+        <div className="seg" role="tablist">
           {LANES.map((l) => (
-            <button key={l.key} role="tab" aria-selected={lane === l.key} className={lane === l.key ? 'pill on' : 'pill'} onClick={() => setLane(l.key)}>
+            <button key={l.key} role="tab" aria-selected={lane === l.key} className={lane === l.key ? 'segbtn on' : 'segbtn'} onClick={() => setLane(l.key)}>
               {l.label} <span className="mono">{data.laneCounts[l.key] || 0}</span>
             </button>
           ))}
@@ -113,13 +136,13 @@ export default function SaveList({ data, params, go }) {
                   <span className="rank mono">{m.rank || ''}</span>
                   <span className="who">
                     <strong>{m.name}</strong>
-                    <span className="sub">{open.map((r) => SHORT[r.measure]).join(' and ')}</span>
+                    <span className="sub">{open.map((r) => SHORT[r.measure]).join(' · ')}</span>
                   </span>
                   <span className="when">
                     {lane === 'save' ? (
                       <>
-                        <span className="sub">call by</span>
-                        <span className="mono">{dayLabel(m.callBy)}</span>
+                        <span className="mono">{spareDays(m, data.plan.asOf)}</span>
+                        <span className="sub">days to spare</span>
                       </>
                     ) : (
                       <span className="sub">{lead?.pdc != null ? pct(lead.pdc) : ''}</span>
@@ -142,7 +165,10 @@ export default function SaveList({ data, params, go }) {
                   {current.callBy != null && lane === 'save' ? ` · call by ${dayLabel(current.callBy)}` : ''}
                 </p>
                 {lane === 'save' && (
-                  <p className="opener">One call to {firstName(current.name)} covers every medicine below.</p>
+                  <>
+                    <p className="opener">One call to {firstName(current.name)} covers every medicine below.</p>
+                    <LogCall id={current.id} logged={logged} setLogged={setLogged} />
+                  </>
                 )}
               </div>
               {current.measures

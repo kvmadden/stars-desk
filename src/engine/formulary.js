@@ -15,11 +15,11 @@ export const CHANGES_2027 = [
 ];
 
 export const TIMELINE_2027 = [
-  { date: 'Sep 30', label: 'Annual notice of change mailed' },
-  { date: 'Oct to Dec', label: 'Switch or file an exception before January' },
-  { date: 'Jan 1', label: 'Changes take effect' },
-  { date: 'Jan 1 to Mar 31', label: 'Transition fill window for removals and new PA' },
-  { date: 'After the fill', label: 'Gap risk if nothing changed' },
+  { date: 'Sep 30', label: 'Notice mailed' },
+  { date: 'Oct to Dec', label: 'Switch window' },
+  { date: 'Jan 1', label: 'Changes start' },
+  { date: 'Jan to Mar', label: 'Transition fill' },
+  { date: 'After that', label: 'Gap risk' },
 ];
 
 export function formularyImpact(members, asOf, statusFor) {

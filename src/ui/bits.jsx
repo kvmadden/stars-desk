@@ -28,7 +28,7 @@ export function Track({ m }) {
       <div className="rail" />
       {m.cut.map((c, i) => (
         <div key={c} className="tick" style={{ left: x(c) }}>
-          <span>{i + 2}</span>
+          <span>{i + 2}★</span>
         </div>
       ))}
       <div className="nat" style={{ left: x(NATIONAL[m.id]) }} title="National MA-PD average" />

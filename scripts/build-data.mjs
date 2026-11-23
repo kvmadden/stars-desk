@@ -137,7 +137,7 @@ const changes = formularyImpact(members, AS_OF, statusFor).map((c) => {
 });
 
 const evalResults = {};
-for (const set of ['dev', 'holdout']) {
+for (const set of ['dev', 'holdout', 'dev2', 'holdout2']) {
   const f = `${root}eval/results/${set}.json`;
   if (existsSync(f)) {
     const r = JSON.parse(readFileSync(f, 'utf8'));

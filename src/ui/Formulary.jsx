@@ -15,15 +15,15 @@ export default function Formulary({ data }) {
           January changes touch {total} members. <span className="hl">{high} have no room</span> for a gap.
         </h1>
         <p className="lede">They are behind or within two weeks of missing 80%. Reach them and their prescribers before January 1.</p>
-        <ol className="timeline">
+      </section>
+      <ol className="timeline" aria-label="What happens when">
           {data.timeline.map((t, k) => (
             <li key={t.date} className={k === 1 ? 'now' : ''}>
               <span className="mono">{t.date}</span>
               <span>{t.label}</span>
             </li>
           ))}
-        </ol>
-      </section>
+      </ol>
       <div className="split">
         <ol className="rows">
           {data.changes.map((x, k) => (
@@ -34,8 +34,8 @@ export default function Formulary({ data }) {
                   <span className="sub">{x.change}</span>
                 </span>
                 <span className="when">
-                  <span className="mono">{x.high}</span>
-                  <span className="sub">of {x.count} at risk</span>
+                  <span><span className="mono">{x.high}</span> at risk</span>
+                  <span className="sub">{x.count} affected</span>
                 </span>
               </button>
             </li>
@@ -58,7 +58,7 @@ export default function Formulary({ data }) {
                   {c.sample.filter((s) => s.risk === 'high').slice(0, 6).map((s) => (
                     <li key={s.id + s.measure}>
                       <strong>{s.name}</strong>
-                      <span className="sub">{s.margin == null ? 'already under 80% this year' : `can miss ${s.margin} more days`} · {s.prescriberName}</span>
+                      <span className="sub">{s.margin == null ? 'below 80% in 2026, likely to gap in January' : `can miss ${s.margin} more days`} · {s.prescriberName}</span>
                     </li>
                   ))}
                   {c.sample.filter((s) => s.risk === 'high').length === 0 && <li className="sub">No one with a thin margin in this sample.</li>}

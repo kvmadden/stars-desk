@@ -41,10 +41,11 @@ export default function App() {
         <a className="brand" href="#/plan" aria-label="Stars Desk home">
           <img src={`${import.meta.env.BASE_URL}star.svg`} alt="" width="28" height="28" />
           <span>Stars Desk</span>
+          <span className="brandsub">synthetic data</span>
         </a>
         <nav className="tabs" aria-label="Sections">
           {TABS.map((t) => (
-            <a key={t.key} href={`#/${t.key}`} className={tab === t.key ? 'tab on' : 'tab'} aria-current={tab === t.key ? 'page' : undefined}><span className="long">{t.label}</span><span className="short">{t.short}</span></a>
+            <a key={t.key} href={`#/${t.key}`} className={tab === t.key || (tab === 'proof' && t.key === 'plan') ? 'tab on' : 'tab'} aria-current={tab === t.key ? 'page' : undefined}><span className="long">{t.label}</span><span className="short">{t.short}</span></a>
           ))}
         </nav>
         <div className="planchip" title="Every member and claim on this desk is made up">

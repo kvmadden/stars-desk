@@ -9,15 +9,28 @@ const ISSUE = {
 const ASK = {
   D11: () => 'Consider a moderate-intensity statin if there is no contraindication. The ADA Standards of Care recommend one for people with diabetes aged 40 to 75, in addition to lifestyle therapy.',
   D12: () => 'Consider whether both are still needed, a gradual benzodiazepine taper if appropriate, and a naloxone prescription. The CDC 2022 opioid guideline advises caution with this combination.',
-  D13: (d) => d.suggestions.map((s) => `${s.drug}: ${s.text}`).join(' '),
+  D13: (d) => {
+    const bladder = ['oxybutynin', 'tolterodine'];
+    if (d.drugs.filter((x) => bladder.includes(x)).length >= 2) {
+      return 'Two bladder antimuscarinics together is duplicate therapy. Consider stopping one, or switching to mirabegron, which is not anticholinergic.';
+    }
+    return d.suggestions.map((s) => `${cap(s.drug)}: ${s.text}`).join(' ');
+  },
 };
-const LABEL = { D11: 'No statin', D12: 'Opioid with benzo', D13: 'Two anticholinergics' };
+const cap = (x) => x.charAt(0).toUpperCase() + x.slice(1);
+const SEVERITY = { D12: 3, D13: 2, D11: 1 };
+const LABEL = { D11: 'Diabetes, no statin (SUPD)', D12: 'Opioid with benzo (COB)', D13: 'Two anticholinergics (Poly-ACH)' };
 const TONE = { D11: 'gold', D12: 'brick', D13: 'slate' };
 
 export default function Safety({ data }) {
   const [i, setI] = useState(0);
   const [queued, setQueued] = useState({});
-  const fax = data.faxes[i];
+  // Most serious first: opioid with benzo, then anticholinergic burden, then missing statins.
+  const faxes = useMemo(() => [...data.faxes].sort((a, b) => {
+    const score = (f) => f.items.reduce((s, it) => s + SEVERITY[it.measure] * 10, 0) + f.items.length;
+    return score(b) - score(a);
+  }), [data]);
+  const fax = faxes[i];
   const totals = useMemo(() => {
     const t = { D11: 0, D12: 0, D13: 0 };
     for (const f of data.faxes) for (const it of f.items) t[it.measure]++;
@@ -30,7 +43,7 @@ export default function Safety({ data }) {
         <h1>
           The top {data.faxes.length} prescribers have <span className="hl">{members} patients</span> to raise.
         </h1>
-        <p className="lede">One fax per prescriber, with the patient, the issue and a specific ask. Overlap past 30 days already counts for 2026, but stopping it still protects the patient and next year's rate.</p>
+        <p className="lede">One fax per prescriber, with the patient, the issue and one ask. Most serious first.</p>
         <div className="chips">
           {data.safetyMeasures.map((m) => (
             <Chip key={m.id} tone={TONE[m.id]}>{LABEL[m.id]} <span className="mono">{totals[m.id]}</span></Chip>
@@ -39,12 +52,13 @@ export default function Safety({ data }) {
       </section>
       <div className="split">
         <ol className="rows">
-          {data.faxes.map((f, k) => (
+          {faxes.map((f, k) => (
             <li key={f.prescriber.id}>
               <button className={k === i ? 'row on' : 'row'} onClick={() => setI(k)}>
                 <span className="who">
                   <strong>{f.prescriber.name}</strong>
                   <span className="sub">{f.prescriber.practice}</span>
+                  <span className="dots">{['D12', 'D13', 'D11'].map((mid) => f.items.filter((it) => it.measure === mid).map((it, n) => <i key={mid + n} className={`sdot ${TONE[mid]}`} title={LABEL[mid]} />))}</span>
                 </span>
                 <span className="when">
                   <span className="mono">{f.items.length}</span>
@@ -57,6 +71,9 @@ export default function Safety({ data }) {
         <section className="detail faxwrap">
           {fax && (
             <>
+              <button className="primary" onClick={() => setQueued({ ...queued, [fax.prescriber.id]: true })} disabled={queued[fax.prescriber.id]}>
+                {queued[fax.prescriber.id] ? 'In the fax queue' : 'Add to fax queue'}
+              </button>
               <div className="fax">
                 <div className="faxtop">
                   <span className="mono">FAX</span>
@@ -69,7 +86,7 @@ export default function Safety({ data }) {
                 </dl>
                 <p>We reviewed pharmacy claims for your patients in our plan. Each item below is a suggestion for your judgment. Please reply on this sheet or call us.</p>
                 <ol className="faxitems">
-                  {fax.items.map((it) => (
+                  {[...fax.items].sort((a, b) => SEVERITY[b.measure] - SEVERITY[a.measure]).map((it) => (
                     <li key={it.member + it.measure}>
                       <p><b>{it.name}</b>, {it.age}. {ISSUE[it.measure](it.detail)}</p>
                       <p className="ask">{ASK[it.measure](it.detail)}</p>
@@ -79,9 +96,6 @@ export default function Safety({ data }) {
                 </ol>
                 <p className="refs">References: ADA Standards of Care in Diabetes, section 10. CDC Clinical Practice Guideline for Prescribing Opioids for Pain, 2022. American Geriatrics Society Beers Criteria, 2023.</p>
               </div>
-              <button className="primary" onClick={() => setQueued({ ...queued, [fax.prescriber.id]: true })} disabled={queued[fax.prescriber.id]}>
-                {queued[fax.prescriber.id] ? 'In the fax queue' : 'Add to fax queue'}
-              </button>
             </>
           )}
         </section>

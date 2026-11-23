@@ -42,7 +42,10 @@ export function features(measure, member, asOf, status) {
   const recent = tf.slice(-6);
   const pharmacies = new Set(recent.map((f) => f.pharmacy)).size;
   const switchTo = SWITCH_TARGETS[measure.id] || [];
-  const switchFill = known.find((f) => switchTo.some((s) => f.ingredients.includes(s)) && last && f.day >= last.day - 15);
+  // A switch is a new non-target drug that first appears around or after the last target fill.
+  // Add-on therapy filled alongside the target drug for months is not a switch.
+  const firstSwitch = known.find((f) => switchTo.some((s) => f.ingredients.includes(s)));
+  const switchFill = firstSwitch && last && firstSwitch.day >= last.day - 15 ? firstSwitch : null;
   const newStart = status.ipsd > 45;
   const daysLate = status.daysSinceRunOut;
   const maxLate = positive.length ? Math.max(...positive) : 0;
@@ -55,7 +58,7 @@ export function features(measure, member, asOf, status) {
 
 export function inferBarrier(f) {
   const why = [];
-  if (f.switchFill && f.daysLate > 0) {
+  if (f.switchFill && f.daysLate > 14) {
     why.push(`Filled ${f.switchFill.drug} after the last ${f.drug} fill`);
     return { barrier: 'switched', fix: 'confirm', why };
   }

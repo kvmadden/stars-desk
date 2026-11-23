@@ -1,0 +1,7 @@
+{
+  "frozen": "2026-11-22",
+  "params.json": "e3a783d41343e1bb519121d6e46a69d0d0bc2750b7ad818d0e8a4fa691698198",
+  "SPEC.md": "cb866e657ff2ec8ff10c809a6a827a1568346d9aac1308ccbc5e02fe0841d570",
+  "seeds": [9101, 9102, 9103],
+  "rule": "Version 2. Written by a separate agent that never read the desk rules. Scored once by node eval/run-eval.mjs holdout2. The desk is not tuned after this run."
+}

@@ -1,6 +1,6 @@
 // Build the demo plan's desk data for the app. Synthetic data only.
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
-import { buildWorld, DEV_PARAMS } from '../src/engine/world.js';
+import { buildWorld, DEV_PARAMS_V2 as DEV_PARAMS } from '../src/engine/world.js';
 import { ADHERENCE, SAFETY, starFor, movesToNextStar, YEAR_DAYS } from '../src/engine/measures.js';
 import { analyzeMember, deskCallList, FIX_TEXT } from '../src/engine/desk.js';
 import { safetyBoard } from '../src/engine/safety.js';
@@ -99,8 +99,17 @@ for (const lane of ['lost', 'prescriber', 'new-start', 'safe']) {
   laneMembers[lane] = analyses.filter((a) => a.measures.some((r) => r.lane === lane) && !rank.has(a.id)).slice(0, 40).map((a) => a.id);
 }
 // Members per lane. A member with drugs in two lanes counts in both.
-const laneCounts = { save: callList.length };
-for (const a of analyses) for (const lane of new Set(a.measures.map((r) => r.lane))) if (lane !== 'save') laneCounts[lane] = (laneCounts[lane] || 0) + 1;
+const laneCounts = { save: callList.length, onTrack: 0 };
+// Each member counted once, in the lane that needs them most.
+const PRIORITY = ['prescriber', 'new-start', 'lost', 'save', 'safe'];
+for (const a of analyses) {
+  if (rank.has(a.id)) continue;
+  const lanes = new Set(a.measures.map((r) => r.lane));
+  if (lanes.size === 0 || [...lanes].every((l) => l === 'excluded' || l === 'not-counted')) continue;
+  const lane = PRIORITY.find((l) => lanes.has(l));
+  if (lane === 'safe' || lane === 'save') laneCounts.onTrack++;
+  else if (lane) laneCounts[lane] = (laneCounts[lane] || 0) + 1;
+}
 const ids = new Set(Object.values(laneMembers).flat());
 const memberViews = Object.fromEntries([...ids].map((id) => [id, memberView(id)]));
 

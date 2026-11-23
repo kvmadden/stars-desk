@@ -14,8 +14,10 @@ const WORKS = {
   sideEffect: ['restart'],
   switched: [],
   steady: ['once', 'steady', 'ninety'],
+  mixed: ['ninety', 'steady', 'costfix'], // either fix helps, but only partly
+  unexplained: [],
 };
-const TRUE_FIX = { forgetful: 'ninety', cost: 'costfix', logistics: 'steady', sideEffect: 'restart', switched: 'none', steady: 'once' };
+const TRUE_FIX = { forgetful: 'ninety', cost: 'costfix', logistics: 'steady', sideEffect: 'restart', switched: 'none', steady: 'once', mixed: 'ninety', unexplained: 'once' };
 
 // truth: { reach, pFix, pGeneric, pDiscover }
 // pDiscover: chance the pharmacist finds the real barrier during the call even without a pre-call guess.
@@ -27,7 +29,7 @@ export function callEffect(member, plan, deliveredEffect, truth, rng) {
   if (!(WORKS[barrier] || []).includes(effect) && rng() < truth.pDiscover) effect = TRUE_FIX[barrier];
   if ((WORKS[barrier] || []).includes(effect)) {
     if (barrier === 'steady') return 'once';
-    return rng() < truth.pFix ? effect : 'once';
+    return rng() < truth.pFix * (barrier === 'mixed' ? 0.6 : 1) ? effect : 'once';
   }
   return rng() < truth.pGeneric ? 'once' : 'none';
 }

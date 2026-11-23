@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { inferBarrier, analyzeMember } from '../src/engine/desk.js';
+import { inferBarrier, analyzeMember, features } from '../src/engine/desk.js';
+import { ADHERENCE } from '../src/engine/measures.js';
+import { statusAsOf } from '../src/engine/pdc.js';
 import { buildWorld, planFills, DEV_PARAMS } from '../src/engine/world.js';
 import { cobStatus, achStatus, supdStatus } from '../src/engine/safety.js';
 import { fleschKincaid, memberNotice, CHANGES_2027 } from '../src/engine/formulary.js';
@@ -8,7 +10,16 @@ const f = (over) => ({ fills: 6, meanLate: 2, rawMean: 2, maxLate: 4, copay30: 0
 
 describe('pharmacist rulebook', () => {
   it('reads a switch to a non-target drug as a prescriber question, not a refill push', () => {
-    expect(inferBarrier(f({ switchFill: { day: 200, drug: 'ezetimibe' }, daysLate: 10 })).fix).toBe('confirm');
+    expect(inferBarrier(f({ switchFill: { day: 200, drug: 'ezetimibe' }, daysLate: 20 })).fix).toBe('confirm');
+  });
+  it('does not read long-running add-on ezetimibe as a switch', () => {
+    const fx = (day, drug) => ({ day, ingredients: [drug], daysSupply: 30, copay: 0, pharmacy: 'A', prescriber: 'P-1' });
+    const fills = [];
+    for (let d = 0; d < 240; d += 30) fills.push(fx(d, 'atorvastatin'));
+    for (let d = 40; d < 273; d += 30) fills.push(fx(d, 'ezetimibe'));
+    const m = { hospice: false, esrd: false, stays: [], fills };
+    const s = statusAsOf(ADHERENCE.D10, m, 273);
+    expect(features(ADHERENCE.D10, m, 273, s).switchFill).toBeNull();
   });
   it('reads a short run then a long stop as possible side effects', () => {
     expect(inferBarrier(f({ fills: 2, daysLate: 40, newStart: true })).barrier).toBe('sideEffect');

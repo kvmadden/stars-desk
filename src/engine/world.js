@@ -28,6 +28,17 @@ export const DEV_PARAMS = {
   safety: { opioid: 0.05, benzoGivenOpioid: 0.14, achGiven65: 0.14, secondAch: 0.12, noStatinGivenDiabetes: 0.1 },
 };
 
+// Version 2 of the development world, after the independent review: add-on ezetimibe and amlodipine
+// in members who never switched, members with two barriers at once, and members whose barrier no
+// fix reaches. Version 1 worlds (DEV_PARAMS and the frozen v1 held-out) generate exactly as before.
+export const DEV_PARAMS_V2 = {
+  ...DEV_PARAMS,
+  name: 'dev-v2',
+  archetypes: { steady: 0.63, forgetful: 0.1, cost: 0.05, sideEffect: 0.05, logistics: 0.07, switched: 0.04, mixed: 0.03, unexplained: 0.03 },
+  late: { ...DEV_PARAMS.late, mixed: { mean: 6, skip: 0.12 }, unexplained: { mean: 8 } },
+  addOn: { ezetimibe: 0.1, amlodipine: 0.3 },
+};
+
 const FIRST = ['Mary', 'James', 'Linda', 'Robert', 'Patricia', 'John', 'Barbara', 'William', 'Carol', 'Richard', 'Susan', 'Thomas', 'Dorothy', 'Charles', 'Nancy', 'Joseph', 'Betty', 'Donald', 'Sandra', 'Ronald', 'Margaret', 'Kenneth', 'Sharon', 'Gary', 'Judith', 'Larry', 'Joyce', 'Frank', 'Gloria', 'Raymond', 'Rosa', 'Luis', 'Maria', 'Jose', 'Mei', 'Wei', 'Anh', 'Minh', 'Fatima', 'Ahmed', 'Gwen', 'Earl', 'Delores', 'Walter', 'Yolanda', 'Harold', 'Bernice', 'Carlos', 'Elena', 'Hector'];
 const LAST = ['Alvarez', 'Bennett', 'Coleman', 'Duarte', 'Ellison', 'Fontaine', 'Garrity', 'Holloway', 'Ibarra', 'Jansen', 'Kowalski', 'Lindqvist', 'Mercado', 'Nakamura', 'Okafor', 'Pellegrino', 'Quintero', 'Rasmussen', 'Salgado', 'Thibodeaux', 'Underwood', 'Valdez', 'Whitfield', 'Xiong', 'Yarbrough', 'Zielinski', 'Abernathy', 'Brannigan', 'Castellano', 'Delacroix', 'Esposito', 'Fairbanks', 'Grummond', 'Haverford', 'Iverson', 'Jessup', 'Kincaid', 'Lockhart', 'Moreau', 'Nguyen', 'Oyelaran', 'Prewitt', 'Rinaldi', 'Stroud', 'Tremblay', 'Vance', 'Wexler', 'Yoder', 'Zamora', 'Pruitt'];
 const PRACTICES = ['Bayview Family Medicine', 'Harbor Internal Medicine', 'Cypress Primary Care', 'Northgate Medical Group', 'Riverside Geriatrics', 'Palmetto Health Partners', 'Lakeshore Endocrinology', 'Seaside Cardiology', 'Oak Hollow Clinic', 'Gulf Coast Physicians'];
@@ -87,6 +98,14 @@ function makeMember(seed, i, P, rng, prescribers) {
   // Projected yearly out-of-pocket, to find the day the member would reach the $2,100 cap.
   const monthly = Object.values(m.hidden.plans).reduce((s, p) => s + COPAY_30[p.tier], 0);
   m.capDay = monthly > 0 ? Math.min(YEAR_DAYS + 1, Math.ceil((OOP_CAP_2026 / monthly) * 30.4)) : YEAR_DAYS + 1;
+  m.hidden.addOns = [];
+  if (P.addOn) {
+    // Add-on therapy alongside a target drug the member keeps taking.
+    const p10 = m.hidden.plans.D10;
+    const p09 = m.hidden.plans.D09;
+    if (p10 && rng() < P.addOn.ezetimibe) m.hidden.addOns.push({ drug: 'ezetimibe', start: p10.start + Math.floor(rng() * 120), pharmacy: p10.pharmacies[0], prescriber: p10.prescriber, ds: p10.ds });
+    if (p09 && rng() < P.addOn.amlodipine) m.hidden.addOns.push({ drug: 'amlodipine', start: p09.start + Math.floor(rng() * 120), pharmacy: p09.pharmacies[0], prescriber: p09.prescriber, ds: p09.ds });
+  }
   m.safety = makeSafety(rng, m, P, prescribers);
   return m;
 }
@@ -94,7 +113,7 @@ function makeMember(seed, i, P, rng, prescribers) {
 function makePlan(seed, id, meas, a, P, rng, pharmacy, pcp, prescribers) {
   const pool = Object.entries(DRUGS).filter(([, d]) => d.measure === meas);
   let drug;
-  if (a === 'cost' && rng() > P.noise.costOnLowTier) {
+  if ((a === 'cost' || a === 'mixed') && rng() > P.noise.costOnLowTier) {
     const brand = pool.filter(([n, d]) => d.tier >= 3 && (n !== 'pitavastatin' || rng() < 0.5));
     drug = pick(rng, brand.length ? brand : pool)[0];
   } else {
@@ -142,6 +161,10 @@ function lateness(regime, plan, P, u, copay) {
       return Math.max(-3, Math.round(ex(P.late.logistics.mean))) + (u[0] < P.late.logistics.spike ? Math.round(P.late.logistics.spikeMean + 4 * n) : 0);
     case 'once':
       return Math.max(-3, Math.round(1.5 * n));
+    case 'mixed':
+      return Math.max(-2, Math.round(ex(P.late.mixed.mean) + 1.5 * n)) + (copay >= 20 && u[1] < P.late.mixed.skip ? 30 : 0);
+    case 'unexplained':
+      return Math.max(-2, Math.round(ex(P.late.unexplained.mean) + 2 * n));
     default:
       return Math.max(-7, Math.round(P.late.steady.mean + P.late.steady.sd * n));
   }
@@ -277,6 +300,9 @@ export function realizeFills(m, P, interventions = {}) {
   const fills = [];
   for (const [meas, plan] of Object.entries(m.hidden.plans)) fills.push(...planFills(m, plan, P, interventions[meas] || null));
   fills.push(...safetyFills(m));
+  for (const a of m.hidden.addOns || []) {
+    for (let d = a.start; d < YEAR_DAYS; d += a.ds + 2) fills.push({ day: d, ingredients: [a.drug], daysSupply: a.ds, copay: 0, pharmacy: a.pharmacy, prescriber: a.prescriber, strength: '', measure: null });
+  }
   return fills.sort((a, b) => a.day - b.day);
 }
 

@@ -13,6 +13,12 @@ It is October 1. A Medicare Advantage plan has a small clinical pharmacy team an
 
 The ranking weights and the projection are planning guesses. The projection's one tuned constant was set during development on simulated plans. A pilot measures both.
 
+## Real plans
+
+The plan view sets the synthetic plan against every Medicare Advantage drug plan in CMS's public 2027 Star Ratings data tables. Bars show how many plans scored each whole percent on each measure, and gold marks the scores one point short of the next star. In those ratings, 385 of 567 Medicare Advantage drug plans with an adherence score sat one point short of the next star on at least one adherence measure. That is the case for working the October list carefully: for two in three plans, one more point on a triple-weighted measure would have meant another star.
+
+The same data checks the desk. Its cut points equal CMS's cut point file on all six measures, and its star logic gives CMS's published star on every real score except 16, which CMS held at the contract's higher 2026 star under its disaster policy. Details and checksums are in [SOURCES.md](SOURCES.md).
+
 ## How a pilot would prove it
 
 The desk makes no outcome claim before a pilot.

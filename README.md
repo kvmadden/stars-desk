@@ -2,13 +2,17 @@
 
 A Part D Stars pharmacist's desk. It answers one question for a Medicare Advantage clinical pharmacy team on October 1: which members move the plan's star ratings, and what should we do about each one?
 
-Everything runs on a synthetic plan of 6,000 members. No real member, claim or plan data is used. Measure rules, weights and cut points come from the CMS 2027 Star Ratings Technical Notes ([docs/SOURCES.md](docs/SOURCES.md)).
+The margin is thin. In CMS's 2027 ratings, 385 of 567 Medicare Advantage drug plans sat one point short of the next star on at least one adherence measure, and those three measures count triple ([CMS data tables](https://www.cms.gov/medicare/health-drug-plans/part-c-d-performance-data)).
+
+![Each adherence measure against every real Medicare Advantage drug plan in CMS's 2027 ratings, with the plans one point short of the next star in gold](docs/img/real-plans.png)
+
+The members and claims are a synthetic plan of 6,000 members. No real member or claim data is used. Measure rules, weights and cut points come from the CMS 2027 Star Ratings Technical Notes, and real plan scores from CMS's public 2027 data tables ([docs/SOURCES.md](docs/SOURCES.md)).
 
 ![The plan view: which measure is closest to the next star, and where the 6,000 members stand](docs/img/plan.png)
 
 ## What it does
 
-- **Plan.** Projects where each Part D measure lands on December 31 from each member's own refill pattern, and how many members separate it from the next star, against the latest published cut points (2027 Star Ratings, standing in for the 2028 ratings that 2026 data feeds).
+- **Plan.** Projects where each Part D measure lands on December 31 from each member's own refill pattern, and how many members separate it from the next star, against the latest published cut points (2027 Star Ratings, standing in for the 2028 ratings that 2026 data feeds). Bars behind each measure show where every real Medicare Advantage drug plan scored in CMS's 2027 ratings, with the plans one point short of the next star in gold.
 - **Call list.** For each member it shows days covered so far, how many more days they can miss and still reach 80%, the last day to refill, a likely barrier read from the claims and the fix to offer (a 90-day supply with auto-refill, one pharmacy with synced dates, a lower-cost option and an Extra Help check, or a clinical call about side effects). One call covers every adherence drug the member takes. It picks members a call can still help, then orders them by who has the least time to spare.
 - **Judgment lanes.** Members who cannot reach 80% this year, new starts with one fill (a second fill adds them to the measure, so clinical need decides), and members whose claims show a therapy change (ask the prescriber, do not push a refill).
 - **Safety faxes.** Statin use in diabetes, opioids with benzodiazepines and two anticholinergics, grouped into one fax per prescriber with a specific ask and references.
@@ -20,6 +24,7 @@ Everything runs on a synthetic plan of 6,000 members. No real member, claim or p
 
 - **PDC math.** Same-ingredient overlapping fills shift forward, different ingredients do not, and inpatient and SNF stay days leave both sides. The engine matches the worked examples in CMS's Attachment L (`tests/pdc.test.js`).
 - **Measure rules.** Denominators, exclusions, cut points, rounding and weights follow the CMS 2027 Technical Notes. Every rule is cited in [docs/SOURCES.md](docs/SOURCES.md).
+- **Against real plans.** The desk's cut points match CMS's 2027 cut point file on all six measures. Its star logic gives the star CMS published on 3,320 of 3,336 real plan scores. The other 16 are plans CMS kept at their higher 2026 star because at least a quarter of their members lived in 2025 disaster areas (`tests/market.test.js`).
 - **No peeking.** The desk reads only claims a plan would have on October 1. A test reruns every member of a test plan with later claims removed and gets identical output.
 - **Member letters** stay at or below a sixth grade reading level, and a transition fill is promised only where the federal rule requires one.
 - **Public text** carries no local paths (a guard test, shown failing on a planted path before it passed).
@@ -56,8 +61,11 @@ The pilot also measures saves per 100 calls, how often the desk's barrier guess 
 npm install
 npm run build   # builds the synthetic plan's data, then the app
 npm run dev     # prints a local address, open it
-npm test        # PDC against the CMS worked examples, the rulebook, safety measures, the guards
+npm test        # PDC against the CMS worked examples, the rulebook, real plans, safety measures, the guards
+npm run cms     # refreshes data/cms from cms.gov and checks each zip's SHA-256
 ```
+
+`data/cms` holds a trimmed copy of CMS's public 2027 Star Ratings data tables: each contract's ID, its six Part D measure scores and stars, its 2025 disaster share and its 2026 stars. No plan names.
 
 ## Stack
 

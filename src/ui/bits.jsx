@@ -1,5 +1,6 @@
 import React from 'react';
 import { MONTH_STARTS, MONTH_NAMES, dayLabel } from './format.js';
+import { pointsToNextStar } from '../engine/market.js';
 
 // MA-PD averages from the CMS 2027 Star Ratings Technical Notes (measure score averages table).
 export const NATIONAL = { D08: 89, D09: 89, D10: 89, D11: 88, D12: 13, D13: 9 };
@@ -16,22 +17,41 @@ export function Stars({ n, size = 14 }) {
   );
 }
 
-// A rate on a track with the cut points as ticks. Higher-is-better tracks run 78 to 98,
-// lower-is-better tracks run from 24 down to 0 so "better" is always to the right.
-export function Track({ m }) {
+// A rate on a track with the cut points as ticks. Higher-is-better tracks run 78 to 98%,
+// lower-is-better tracks run from 24 down to 0% so "better" is always to the right.
+// With `hist` ([score, plans] pairs from CMS's 2027 ratings) it draws where real MA-PD plans scored,
+// gold where a score sat one point short of the next star. Scores off the axis are not drawn.
+export function Track({ m, hist }) {
   const hi = m.higherIsBetter;
-  const lo = hi ? 78 : 24;
-  const top = hi ? 98 : 0;
-  const x = (v) => `${Math.max(0, Math.min(100, ((v - lo) / (top - lo)) * 100))}%`;
+  // The axis runs edge to edge of whole-percent bins, so the end bars sit inside the track.
+  const lo = hi ? 77.5 : 24.5;
+  const top = hi ? 98.5 : -0.5;
+  const span = Math.abs(top - lo);
+  const pos = (v) => ((v - lo) / (top - lo)) * 100;
+  const x = (v) => `${Math.max(0, Math.min(100, pos(v)))}%`;
+  const bars = hist ? hist.filter(([s]) => pos(s) >= 0 && pos(s) <= 100) : [];
+  const most = Math.max(1, ...bars.map(([, n]) => n));
   return (
-    <div className="track" aria-hidden="true">
+    <div className={hist ? 'track withhist' : 'track'} aria-hidden="true">
+      {hist && (
+        <div className="hist">
+          {bars.map(([s, n]) => (
+            <span
+              key={s}
+              className={pointsToNextStar(m, s) === 1 ? 'hbar near' : 'hbar'}
+              style={{ left: `calc(${pos(s) - 50 / span}% + 1px)`, width: `calc(${100 / span}% - 2px)`, height: `${Math.max(6, (100 * n) / most)}%` }}
+            />
+          ))}
+        </div>
+      )}
       <div className="rail" />
       {m.cut.map((c, i) => (
-        <div key={c} className="tick" style={{ left: x(c) }}>
+        // CMS rounds to whole percents, so a cut point's real line sits half a point out: 89% for 3 stars starts at 88.5.
+        <div key={c} className="tick" style={{ left: x(hi ? c - 0.5 : c + 0.5) }}>
           <span>{i + 2}★</span>
         </div>
       ))}
-      <div className="nat" style={{ left: x(NATIONAL[m.id]) }} title="National MA-PD average" />
+      {!hist && <div className="nat" style={{ left: x(NATIONAL[m.id]) }} title="National MA-PD average" />}
       <div className="dot" style={{ left: x(m.rate) }} />
     </div>
   );

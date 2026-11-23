@@ -30,6 +30,21 @@ From the same document:
 - Polypharmacy: Use of Multiple CNS-Active Medications in Older Adults (Poly-CNS) is a display measure in 2027, not a scored one, so the desk leaves it out.
 - Poly-ACH: age 65 or older, two or more unique anticholinergic drugs, each with two fills, overlapping 30 cumulative days.
 
+## Real plan scores
+
+CMS, *2027 Star Ratings Data Tables* (October 8, 2026), from the Part C and D performance data page.
+https://www.cms.gov/medicare/health-drug-plans/part-c-d-performance-data
+Zip: https://www.cms.gov/files/zip/2027-star-ratings-data-tables-oct-8-2026.zip (SHA-256 2704032d3f72e71a763aac075a8449e382ca07834417b1da53995b70d54e9967). The desk uses its Measure Data, Measure Stars, Summary Ratings and Part D Cut Points tables.
+
+CMS, *2026 Star Ratings Data Tables*, for each contract's 2026 measure stars.
+Zip: https://www.cms.gov/files/zip/2026-star-ratings-data-tables.zip (SHA-256 a72f4f4965239e12b3b264c843a71ea6bbd9c655547be5b1f95b3b0df4d1cde7).
+
+`scripts/cms-derive.mjs` downloads both, checks the checksums and keeps only what the desk needs in `data/cms/star-ratings-2027-partd.json`: contract ID, MA-PD or PDP, the six Part D measure scores and stars, the 2025 disaster share and the 2026 stars. CMS renumbered the measures between years (SUPD was D12 in the 2026 ratings, and COB and Poly-ACH were not rated), so columns are matched by measure name.
+
+- Of 735 contracts in the tables, 687 are MA-PD. 567 have a published score on at least one adherence measure, and 385 of those sat one whole point short of the next star on at least one of D08, D09 and D10.
+- Scores are whole percents, and CMS assigns stars from them. The desk's star logic gives CMS's published star on 3,320 of 3,336 MA-PD contract scores across the six measures.
+- The other 16 are all D08 scores at contracts with at least 25% of members in 2025 disaster areas. Under the extreme and uncontrollable circumstances policy, those contracts receive the higher of their 2026 or 2027 measure star (Technical Notes, page 9), and in all 16 the published star is the 2026 one.
+
 ## Part D benefit, 2026
 
 CMS, *Final CY 2026 Part D Redesign Program Instructions*: the 2026 annual out-of-pocket threshold is $2,100 and the maximum deductible is $615.
@@ -49,4 +64,4 @@ https://www.ecfr.gov/current/title-42/chapter-IV/subchapter-B/part-423/subpart-C
 
 ## What is synthetic
 
-The plan, members, names, prescribers, pharmacies, claims, copays, tiers and the January 2027 formulary changes are all made up. Drug names are real generics.
+The plan, members, names, prescribers, pharmacies, claims, copays, tiers and the January 2027 formulary changes are all made up. Drug names are real generics. Only the real plan scores in `data/cms` are real, and they are public.

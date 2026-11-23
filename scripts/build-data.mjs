@@ -1,11 +1,12 @@
 // Build the demo plan's desk data for the app. Synthetic data only.
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { buildWorld, DEV_PARAMS_V2 as DEV_PARAMS } from '../src/engine/world.js';
 import { ADHERENCE, SAFETY, starFor, movesToNextStar, YEAR_DAYS } from '../src/engine/measures.js';
 import { analyzeMember, deskCallList, FIX_TEXT } from '../src/engine/desk.js';
 import { safetyBoard } from '../src/engine/safety.js';
 import { formularyImpact, memberNotice, fleschKincaid, TIMELINE_2027 } from '../src/engine/formulary.js';
 import { targetFills } from '../src/engine/pdc.js';
+import { measureSummary, oneAwaySummary, starCheck } from '../src/engine/market.js';
 
 const SEED = 201; // a plan the rules were never tuned on
 const AS_OF = 273; // October 1, 2026
@@ -137,7 +138,19 @@ const changes = formularyImpact(members, AS_OF, statusFor).map((c) => {
   };
 });
 
+// Real plans: CMS's public 2027 Star Ratings, trimmed to the six Part D measures (scripts/cms-derive.mjs).
+const cms = JSON.parse(readFileSync(`${root}data/cms/star-ratings-2027-partd.json`, 'utf8'));
+const check = starCheck(cms);
+const market = {
+  source: { title: cms.sources[0].title, page: cms.page },
+  ...oneAwaySummary(cms),
+  measures: Object.fromEntries(cms.measures.map((id) => [id, measureSummary(cms, id)])),
+  check: { checked: check.checked, reproduced: check.reproduced, heldAt2026: check.heldAt2026.length, unexplained: check.unexplained.length },
+};
+if (check.unexplained.length) throw new Error(`star logic disagrees with CMS on ${check.unexplained.length} scores`);
+
 const out = {
+  market,
   plan: { name: 'Harbor Senior Rx', synthetic: true, asOf: AS_OF, year: 2026, members: members.length, k: K, yearDays: YEAR_DAYS },
   measures, safetyMeasures, laneCounts, laneMembers, members: memberViews, faxes, changes, timeline: TIMELINE_2027,
 };
@@ -146,4 +159,5 @@ writeFileSync(`${root}public/data/desk.json`, JSON.stringify(out));
 console.log('wrote public/data/desk.json', (JSON.stringify(out).length / 1024).toFixed(0), 'KB');
 console.log(measures.map((m) => `${m.id} ${m.rate.toFixed(1)} ${m.star}* toNext ${m.toNext} open ${m.open} onList ${m.onList}`).join('\n'));
 console.log(safetyMeasures.map((m) => `${m.id} ${m.num}/${m.den} ${m.rate.toFixed(1)} ${m.star}* toNext ${m.toNext} heading ${m.heading}`).join('\n'));
+console.log('market', `${market.oneAway} of ${market.plans} MA-PD plans one point from the next star`, 'check', market.check);
 console.log('lanes', laneCounts, 'faxes', faxes.length, 'changes', changes.map((c) => `${c.drug} ${c.count}/${c.high} grade ${c.grade}`).join(', '));

@@ -9,6 +9,7 @@
     "dev": "vite",
     "data": "node scripts/build-data.mjs",
     "eval": "node eval/run-eval.mjs",
+    "cms": "node scripts/cms-derive.mjs",
     "build": "node scripts/build-data.mjs && vite build",
     "preview": "vite preview",
     "test": "vitest run"

@@ -57,10 +57,10 @@ export default function App() {
         {tab === 'list' && <SaveList data={data} params={params} go={go} />}
         {tab === 'safety' && <Safety data={data} params={params} />}
         {tab === 'formulary' && <Formulary data={data} params={params} />}
-        {(tab === 'pilot' || tab === 'proof') && <Pilot />}
+        {(tab === 'pilot' || tab === 'proof') && <Pilot data={data} />}
       </main>
       <footer className="foot">
-        <span>Synthetic plan and members. Measure rules and the latest published cut points from the CMS 2027 Star Ratings Technical Notes.</span>
+        <span>Synthetic plan and members. Measure rules, cut points and real plan scores from CMS's 2027 Star Ratings.</span>
         <a href="#/pilot">How a pilot would prove it</a>
       </footer>
     </div>

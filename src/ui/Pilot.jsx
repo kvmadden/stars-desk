@@ -35,14 +35,21 @@ const CARDS = [
   },
 ];
 
-const CHECKED = [
-  "PDC math matches CMS's own worked examples",
-  'Measure rules and cut points from the CMS 2027 Technical Notes',
-  'Reads only claims a plan has on October 1',
-  'Automated tests for each of these in the repo',
-];
+function checked(market) {
+  const c = market?.check;
+  return [
+    "PDC math matches CMS's own worked examples",
+    'Cut points match the CMS 2027 data file on all six measures',
+    c
+      ? `Star logic gives CMS's published star on ${c.reproduced.toLocaleString()} of ${c.checked.toLocaleString()} real plan scores. The other ${c.heldAt2026} are plans CMS kept at their 2026 star under its disaster rule`
+      : "Star logic checked against CMS's published stars",
+    'Reads only claims a plan has on October 1',
+    'Automated tests for each of these in the repo',
+  ];
+}
 
-export default function Pilot() {
+export default function Pilot({ data }) {
+  const CHECKED = checked(data?.market);
   return (
     <div className="page pilot">
       <section className="hero small">

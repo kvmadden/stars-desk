@@ -8,7 +8,7 @@ function headline(measures) {
   return open[0];
 }
 
-function MeasureRow({ m, onOpen, safety, linkLabel }) {
+function MeasureRow({ m, hist, onOpen, safety, linkLabel }) {
   const next = m.star + 1;
   return (
     <li className="mrow">
@@ -18,7 +18,7 @@ function MeasureRow({ m, onOpen, safety, linkLabel }) {
       </div>
       <Stars n={m.star} />
       <div className="mtrack">
-        <Track m={m} />
+        <Track m={m} hist={hist} />
         <div className="trackcap">
           <span className="mono">{m.rate.toFixed(1)}%</span>
           <span className="sub">national average {NATIONAL[m.id]}%</span>
@@ -75,6 +75,7 @@ function Today({ data, go }) {
 
 export default function Plan({ data, go }) {
   const h = headline(data.measures);
+  const mk = data.market;
   return (
     <div className="page plan">
       <div className="herogrid">
@@ -102,19 +103,31 @@ export default function Plan({ data, go }) {
 
       <section className="board">
         <h2>Where each measure lands if nothing changes</h2>
+        {mk && (
+          <>
+            <p className="boardsub">
+              <b>{mk.oneAway} of {mk.plans}</b> real Medicare Advantage drug plans sat one point short of the next star on at least one adherence measure in CMS's 2027 ratings.
+            </p>
+            <p className="sub keyline">
+              <span><i className="keybar real" />Real plans</span>
+              <span><i className="keybar near" />One point short of the next star</span>
+              <span><i className="keydot" />This plan, projected</span>
+            </p>
+          </>
+        )}
         <ul className="mlist">
           {[...data.measures].sort((a, b) => (a.id === h?.id ? -1 : b.id === h?.id ? 1 : 0)).map((m) => (
-            <MeasureRow key={m.id} m={m} linkLabel="Members" onOpen={() => go('list', { measure: m.id })} />
+            <MeasureRow key={m.id} m={m} hist={mk?.measures[m.id]?.hist} linkLabel="Members" onOpen={() => go('list', { measure: m.id })} />
           ))}
         </ul>
         <h2 className="second">Safety measures</h2>
         <ul className="mlist">
           {data.safetyMeasures.map((m) => (
-            <MeasureRow key={m.id} m={m} safety linkLabel="Faxes" onOpen={() => go('safety', { measure: m.id })} />
+            <MeasureRow key={m.id} m={m} hist={mk?.measures[m.id]?.hist} safety linkLabel="Faxes" onOpen={() => go('safety', { measure: m.id })} />
           ))}
         </ul>
         <p className="note">
-          Adherence rates are projected to December 31 from each member's own refill pattern through September 30. The projection is a simple rule of thumb, and a pilot would measure how close it gets. Safety rates are part-year, as of today, and for opioids with benzos and two anticholinergics lower is better. Ticks mark the 2027 Star Ratings cut points, the latest published, standing in for the 2028 ratings this year's data feeds.
+          Adherence rates are projected to December 31 from each member's own refill pattern through September 30. The projection is a simple rule of thumb, and a pilot would measure how close it gets. Safety rates are part-year, as of today, and for opioids with benzos and two anticholinergics lower is better. Ticks mark the 2027 Star Ratings cut points, the latest published, standing in for the 2028 ratings this year's data feeds. Bars are every MA-PD contract with a published score in CMS's 2027 Star Ratings data tables (October 8, 2026), in whole percents as CMS scores them. A few plans off the axis are not drawn.
         </p>
       </section>
     </div>

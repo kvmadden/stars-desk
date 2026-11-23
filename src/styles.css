@@ -75,6 +75,22 @@ h1.h2, h2 { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-siz
 .tick span { position: absolute; top: 22px; left: -8px; font-size: 11px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
 .nat { position: absolute; top: 10px; width: 2px; height: 12px; margin-left: -1px; background: var(--slate); opacity: 0.6; }
 .dot { position: absolute; top: 8px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: var(--gold); border: 3px solid #fff; box-shadow: 0 0 0 1px var(--gold); }
+/* real plans from CMS's 2027 ratings, behind the rail */
+.track.withhist { height: 64px; }
+.hist { position: absolute; left: 0; right: 0; top: 0; height: 30px; }
+.hbar { position: absolute; bottom: 0; border-radius: 2px 2px 0 0; background: #b9c0c8; }
+.hbar.near { background: #e3b45c; }
+.track.withhist .rail { top: 32px; }
+.track.withhist .tick { top: 26px; height: 16px; }
+.track.withhist .tick span { top: 18px; }
+.track.withhist .dot { top: 26px; }
+.boardsub { margin: 6px 0 4px; max-width: 760px; font-size: 16px; }
+.boardsub b { font-weight: 600; }
+.keyline { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 8px; }
+.keydot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; background: var(--gold); box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--gold); }
+.keybar { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin: 0 6px 0 0; vertical-align: -1px; }
+.keybar.real { background: #b9c0c8; }
+.keybar.near { background: #e3b45c; }
 
 /* chips and pills */
 .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 13px; line-height: 1.3; white-space: nowrap; }

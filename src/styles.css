@@ -266,15 +266,13 @@ aside.today { background: var(--surface); border: 1px solid var(--line); border-
 .sdot.gold { background: var(--gold); }
 
 .proofmain { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; display: grid; grid-template-columns: 280px 1fr; gap: 8px 48px; align-items: start; }
-.proofmain h2, .proofmain > .sub { grid-column: 1; }
-.proofmain .bars { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
+.proofmain .bars { margin: 0; }
 .proofmain .bars li { grid-template-columns: 280px 1fr 56px; font-size: 15px; }
 .devpanel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin: 16px 0; }
 .devpanel h3 { margin: 0; }
 .brandsub { display: none; }
 @media (max-width: 860px) {
   .proofmain { grid-template-columns: 1fr; padding: 16px; }
-  .proofmain .bars { grid-column: 1; grid-row: auto; }
   .proofmain .bars li { grid-template-columns: 1fr 48px; }
   .brandsub { display: inline; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; color: #c9d1dc; margin-left: 4px; }
 }

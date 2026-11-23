@@ -54,8 +54,10 @@ export default function Proof({ data }) {
         <p className="lede">The gain comes from matching the fix to the barrier. Ordering the same list better, with a plain reminder, adds little.</p>
       </section>
       <section className="proofmain">
-        <h2>Held-out plans</h2>
-        <p className="sub">{held?.seeds.length} plans of 6,000 members, with settings fixed before the test and never used to build the rules</p>
+        <div>
+          <h2>Held-out plans</h2>
+          <p className="sub">{held?.seeds.length} plans of 6,000 members, with settings fixed before the test and never used to build the rules</p>
+        </div>
         <Bars r={held || dev} max={max} />
       </section>
       <button className="ghost" onClick={() => setMore(!more)} aria-expanded={more}>{more ? 'Hide how this was tested' : 'How this was tested'}</button>

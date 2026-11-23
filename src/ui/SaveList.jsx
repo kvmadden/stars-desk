@@ -70,17 +70,29 @@ function MeasureCard({ row, asOf }) {
 const spareDays = (m, asOf) => (m.callBy == null ? '' : Math.max(0, m.callBy - asOf));
 
 const OUTCOMES = ['Reached, fix agreed', 'Reached, declined', 'Left a message', 'Wrong number'];
+// What the pharmacist actually found. A pilot compares this with the desk's guess.
+const FOUND = ['Refill routine', 'Cost', 'Pharmacy logistics', 'Side effects', 'Therapy changed', 'Something else'];
 
 function LogCall({ id, logged, setLogged }) {
   const [open, setOpen] = useState(false);
+  const [outcome, setOutcome] = useState(null);
   if (logged[id]) return <p className="logged"><span className="tag teal">Logged</span> {logged[id]}</p>;
+  const save = (text) => { setLogged({ ...logged, [id]: text }); setOpen(false); setOutcome(null); };
   return (
     <div className="logwrap">
       <button className="primary" onClick={() => setOpen(!open)} aria-expanded={open}>Log call outcome</button>
-      {open && (
+      {open && !outcome && (
         <div className="choices" role="group" aria-label="Call outcome">
           {OUTCOMES.map((o) => (
-            <button key={o} className="pill" onClick={() => { setLogged({ ...logged, [id]: o }); setOpen(false); }}>{o}</button>
+            <button key={o} className="pill" onClick={() => (o.startsWith('Reached') ? setOutcome(o) : save(o))}>{o}</button>
+          ))}
+        </div>
+      )}
+      {open && outcome && (
+        <div className="choices" role="group" aria-label="Barrier found on the call">
+          <span className="sub">What did you find?</span>
+          {FOUND.map((f) => (
+            <button key={f} className="pill" onClick={() => save(`${outcome} · ${f}`)}>{f}</button>
           ))}
         </div>
       )}

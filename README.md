@@ -8,56 +8,45 @@ Everything runs on a synthetic plan of 6,000 members. No real member, claim or p
 
 ## What it does
 
-- **Plan.** Forecasts where each Part D measure lands on December 31 and how many saves separate it from the next star, against the latest published cut points (2027 Star Ratings, standing in for the 2028 ratings that 2026 data feeds).
-- **Call list.** Ranks members by expected saves. For each member it shows days covered so far, the gap budget left, the last day to refill, a likely barrier read from the claims and the fix to offer (a 90-day supply with auto-refill, one pharmacy with synced dates, a lower-cost option with Extra Help and the Medicare Prescription Payment Plan, or a clinical call about side effects). One call covers every adherence drug the member takes.
+- **Plan.** Projects where each Part D measure lands on December 31 from each member's own refill pattern, and how many members separate it from the next star, against the latest published cut points (2027 Star Ratings, standing in for the 2028 ratings that 2026 data feeds).
+- **Call list.** For each member it shows days covered so far, how many more days they can miss and still reach 80%, the last day to refill, a likely barrier read from the claims and the fix to offer (a 90-day supply with auto-refill, one pharmacy with synced dates, a lower-cost option and an Extra Help check, or a clinical call about side effects). One call covers every adherence drug the member takes. It picks members a call can still help, then orders them by who has the least time to spare.
 - **Judgment lanes.** Members who cannot reach 80% this year, new starts with one fill (a second fill adds them to the measure, so clinical need decides), and members whose claims show a therapy change (ask the prescriber, do not push a refill).
 - **Safety faxes.** Statin use in diabetes, opioids with benzodiazepines and two anticholinergics, grouped into one fax per prescriber with a specific ask and references.
 - **January changes.** Members hit by the plan's 2027 formulary changes, who has no room for a gap, a pharmacist switch note for the prescriber and a member letter held to a sixth grade reading level.
 
-## How well it works
+![Call list with one member's coverage, days to spare, barrier and fix](docs/img/call-list.png)
 
-![Call list with one member's coverage, gap budget, barrier and fix](docs/img/call-list.png)
+## What's checked
 
-Scored by playing October 1 to December 31 forward on each plan, with and without 500 member calls, and counting members who finished at or above 80% because of a call. Per 100 calls:
+- **PDC math.** Same-ingredient overlapping fills shift forward, different ingredients do not, and inpatient and SNF stay days leave both sides. The engine matches the worked examples in CMS's Attachment L (`tests/pdc.test.js`).
+- **Measure rules.** Denominators, exclusions, cut points, rounding and weights follow the CMS 2027 Technical Notes. Every rule is cited in [docs/SOURCES.md](docs/SOURCES.md).
+- **No peeking.** The desk reads only claims a plan would have on October 1. A test reruns every member of a test plan with later claims removed and gets identical output.
+- **Member letters** stay at or below a sixth grade reading level, and a transition fill is promised only where the federal rule requires one.
+- **Public text** carries no local paths (a guard test, shown failing on a planted path before it passed).
 
-| Call list | Development (5 plans) | Held-out (3 plans, scored once) |
-| --- | --- | --- |
-| Under 80%, lowest first | 2.4 | 1.5 |
-| Most overdue first | 3.2 | 3.1 |
-| Under 80%, closest to 80 first | 11.2 | 11.8 |
-| Fewest missed days left first (strongest plain list) | 14.0 | 12.5 |
-| Desk order, plain reminder call | 14.5 | 14.1 |
-| **Desk order and matched fix** | **27.4** | **27.1** |
+## How a pilot would prove it
 
-What carries the result is the fix, not the ordering. Against the list a capable adherence team already uses (skip members who cannot reach 80%, call those with the fewest missed days left first), the desk's ordering with a plain reminder adds a little. Reading the barrier from the claims and offering the matching fix roughly doubles the saves. Across 27 combinations of the call assumptions (reach, fix rate and how often a pharmacist finds the barrier on the phone), the full desk beat the strongest plain list in all 27 on both sets.
+The desk makes no outcome claim yet. This is the test that would earn one.
 
-These are version 2 plans. They include add-on ezetimibe and amlodipine that can look like a switch, members with two barriers at once, and members no fix reaches. Their held-out settings were written by a separate agent that never saw the desk's rules and were hashed before the one run. The barrier guess matched the simulator's hidden barrier for 1,056 of 1,921 called member-drugs on held-out (55%). The rulebook has no label for two barriers at once, so that share is lower than on version 1. Version 1 results stay in `eval/results` (held-out desk 24.6 against 10.2).
+1. **October 1.** Take members who can still reach 80% on at least one adherence measure.
+2. **Randomize** them into two arms with the same number of calls. Arm A gets the team's current list and script. Arm B gets the desk's list and matched fix.
+3. **Log every call:** reached or not, the barrier the pharmacist found, the fix offered and accepted, and the follow-up date. The app's Log call outcome button captures these.
+4. **December 31.** Compare the share of each arm at 80% PDC, using the CMS rules on the plan's own claims.
 
-The plans and the call effects are simulated. That makes this a test of the ranking and the fixes given those mechanics, not a measured result on real members. A pilot with real outreach logs would measure reach and fix rates directly.
+The pilot also measures saves per 100 calls, how often the desk's barrier guess matched what the pharmacist found, and how close the year-end projection came. Size it before the first call from the plan's own prior-year rate for members like these, and set the margin that would justify adopting the desk in advance. Both arms keep the plan's standard reminders, pharmacists can override the list, and no member is denied a clinical call.
 
-The method, the assumptions and what this does not show are in [docs/METHOD.md](docs/METHOD.md).
+## About the simulator
 
-### Harder conditions
-
-The same frozen held-out plans, started later or with fewer resources. The desk is unchanged. Per 100 calls:
-
-| Condition | Strongest plain list | Desk |
-| --- | --- | --- |
-| October 1 start (main result) | 12.5 | 27.1 |
-| November 1 start | 12.7 | 27.1 |
-| December 1 start | 7.1 | 16.2 |
-| October 1, only 30% of members answer | 7.1 | 14.0 |
-| October 1, only 150 calls | 14.0 | 32.4 |
-
-The strongest plain list is whichever plain list scored best in that condition: fewest missed days left first, except with 150 calls, where closest to 80% first did better. By December most members who will miss 80% already have, so every list saves fewer. The desk keeps about twice the strongest plain list in every condition. Source: `eval/results/stress-holdout2.json`.
+`eval/` holds a simulator used during development to check the code's logic: that the desk never reads hidden data, that lanes and rankings behave as designed, and that nothing breaks on harder synthetic plans. Its effect sizes depend on call success rates that were assumed, not measured, and the barriers it hides are the same types the rulebook reads. So its outputs are logic checks, not results, and this README quotes none of them. Details are in [docs/METHOD.md](docs/METHOD.md).
 
 ## What it can't do
 
-- **It has never seen a real member.** Every number above comes from simulated plans and simulated call effects. Real reach and fix rates need a pilot with outreach logs.
-- **It names one barrier per drug.** Members with two barriers (cost and a refill routine, say) or with one the claims don't show get a single guess. On the harder held-out plans the guess matched the hidden barrier 55% of the time.
+- **It has no outcome evidence yet.** The pilot above is how to get it.
+- **Its barrier rules are unchecked against real calls.** It names one barrier per drug from claims alone. The pilot's barrier-found field is the first real test of how often it's right.
+- **Its ranking and projection use planning guesses.** How much a call can change each barrier, and how late a member tends to refill, are rules of thumb until a pilot measures them.
 - **It reads claims only.** No lab values, no diagnoses beyond the measure exclusions, no notes from earlier calls. A pharmacist on the phone still has to confirm the barrier.
 - **It doesn't know the 2028 cut points.** It uses the 2027 Star Ratings cut points, the latest published. The 2028 adherence measures may also add risk adjustment the desk doesn't model.
-- **It doesn't optimize for the plan's overall star rating.** It ranks members by expected saves weighted by measure weight. It does not model the summary rating, the reward factor or the improvement measures.
+- **It doesn't optimize for the plan's overall star rating.** It does not model the summary rating, the reward factor or the improvement measures.
 - **Its suggestions are prompts, not orders.** Lower-cost options, switch notes and fax asks are for the prescriber's judgment, and switches depend on the indication, which claims don't show.
 - **Safety measures are part-year.** Opioid with benzodiazepine and anticholinergic overlap already past 30 days counts for this year no matter what the fax does.
 
@@ -67,14 +56,12 @@ The strongest plain list is whichever plain list scored best in that condition: 
 npm install
 npm run build   # builds the synthetic plan's data, then the app
 npm run dev     # prints a local address, open it
-npm test        # PDC against the CMS worked examples, the rulebook, safety measures, the public text guard
+npm test        # PDC against the CMS worked examples, the rulebook, safety measures, the guards
 ```
-
-`node eval/run-eval.mjs dev` reruns the development evaluation. The held-out evaluation has already run once and refuses to run again.
 
 ## Stack
 
-React and Vite, plain JavaScript, Vitest. The engine in `src/engine` has no dependencies and is shared by the app, the data build and the evaluation.
+React and Vite, plain JavaScript, Vitest. The engine in `src/engine` has no dependencies and is shared by the app, the data build and the simulator.
 
 ## License
 

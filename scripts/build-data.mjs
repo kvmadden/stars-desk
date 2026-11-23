@@ -1,5 +1,5 @@
 // Build the demo plan's desk data for the app. Synthetic data only.
-import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { buildWorld, DEV_PARAMS_V2 as DEV_PARAMS } from '../src/engine/world.js';
 import { ADHERENCE, SAFETY, starFor, movesToNextStar, YEAR_DAYS } from '../src/engine/measures.js';
 import { analyzeMember, deskCallList, FIX_TEXT } from '../src/engine/desk.js';
@@ -10,7 +10,6 @@ import { targetFills } from '../src/engine/pdc.js';
 const SEED = 201; // a plan the rules were never tuned on
 const AS_OF = 273; // October 1, 2026
 const K = 500;
-const REACH = 0.6; // planning assumption, same as the evaluation
 
 const root = new URL('..', import.meta.url).pathname;
 const world = buildWorld(SEED, DEV_PARAMS);
@@ -25,7 +24,7 @@ const rank = new Map(callList.map((id, i) => [id, i + 1]));
 
 // Plan forecast from the desk's own miss probabilities.
 const plan = {};
-for (const meas of Object.values(ADHERENCE)) plan[meas.id] = { den: 0, exp: 0, listSaves: 0, lanes: {} };
+for (const meas of Object.values(ADHERENCE)) plan[meas.id] = { den: 0, exp: 0, open: 0, onList: 0, lanes: {} };
 for (const a of analyses) {
   for (const r of a.measures) {
     const p = plan[r.measure];
@@ -34,7 +33,8 @@ for (const a of analyses) {
     if (s === 'open' || s === 'safe-if-supplied' || s === 'lost') {
       p.den++;
       p.exp += s === 'lost' ? 0 : 1 - r.pMiss;
-      if (rank.has(a.id) && r.lane === 'save') p.listSaves += r.uplift * REACH;
+      if (s === 'open') p.open++;
+      if (rank.has(a.id) && r.lane === 'save') p.onList++;
     }
   }
 }
@@ -45,7 +45,7 @@ const measures = Object.values(ADHERENCE).map((meas) => {
   return {
     id: meas.id, short: meas.short, label: meas.label, weight: meas.weight, cut: meas.cut, higherIsBetter: true,
     den: p.den, num, rate, star: starFor(meas, rate), toNext: movesToNextStar(meas, num, p.den),
-    listSaves: Math.round(p.listSaves), lanes: p.lanes,
+    open: p.open, onList: p.onList, lanes: p.lanes,
   };
 });
 
@@ -99,7 +99,7 @@ for (const lane of ['lost', 'prescriber', 'new-start', 'safe']) {
   laneMembers[lane] = analyses.filter((a) => a.measures.some((r) => r.lane === lane) && !rank.has(a.id)).slice(0, 40).map((a) => a.id);
 }
 // Members per lane. A member with drugs in two lanes counts in both.
-const laneCounts = { save: callList.length, onTrack: 0 };
+const laneCounts = { save: callList.length, onTrack: 0, overflow: 0 };
 // Each member counted once, in the lane that needs them most.
 const PRIORITY = ['prescriber', 'new-start', 'lost', 'save', 'safe'];
 for (const a of analyses) {
@@ -107,7 +107,8 @@ for (const a of analyses) {
   const lanes = new Set(a.measures.map((r) => r.lane));
   if (lanes.size === 0 || [...lanes].every((l) => l === 'excluded' || l === 'not-counted')) continue;
   const lane = PRIORITY.find((l) => lanes.has(l));
-  if (lane === 'safe' || lane === 'save') laneCounts.onTrack++;
+  if (lane === 'safe') laneCounts.onTrack++;
+  else if (lane === 'save') laneCounts.overflow++; // could use a call, but past this month's capacity
   else if (lane) laneCounts[lane] = (laneCounts[lane] || 0) + 1;
 }
 const ids = new Set(Object.values(laneMembers).flat());
@@ -136,31 +137,13 @@ const changes = formularyImpact(members, AS_OF, statusFor).map((c) => {
   };
 });
 
-const evalResults = {};
-for (const set of ['dev', 'holdout', 'dev2', 'holdout2']) {
-  const f = `${root}eval/results/${set}.json`;
-  if (existsSync(f)) {
-    const r = JSON.parse(readFileSync(f, 'utf8'));
-    evalResults[set] = { seeds: r.seeds, totals: r.totals, calls: r.calls, per100: r.per100, confusion: r.confusion, truth: r.truth, setup: r.setup, grid: r.grid };
-  }
-}
-const amend = `${root}eval/results/holdout-amendment-gapbudget.json`;
-if (evalResults.holdout && existsSync(amend)) {
-  const a = JSON.parse(readFileSync(amend, 'utf8'));
-  if (a.reproduced) {
-    evalResults.holdout.per100.gapBudget = a.per100.gapBudget;
-    evalResults.holdout.grid = evalResults.holdout.grid.map((g, i) => ({ ...g, gained: { ...g.gained, gapBudget: a.grid[i].gained.gapBudget } }));
-    evalResults.holdout.amended = true;
-  }
-}
-
 const out = {
-  plan: { name: 'Harbor Senior Rx', synthetic: true, asOf: AS_OF, year: 2026, members: members.length, k: K, reach: REACH, yearDays: YEAR_DAYS },
-  measures, safetyMeasures, laneCounts, laneMembers, members: memberViews, faxes, changes, timeline: TIMELINE_2027, eval: evalResults,
+  plan: { name: 'Harbor Senior Rx', synthetic: true, asOf: AS_OF, year: 2026, members: members.length, k: K, yearDays: YEAR_DAYS },
+  measures, safetyMeasures, laneCounts, laneMembers, members: memberViews, faxes, changes, timeline: TIMELINE_2027,
 };
 mkdirSync(`${root}public/data`, { recursive: true });
 writeFileSync(`${root}public/data/desk.json`, JSON.stringify(out));
 console.log('wrote public/data/desk.json', (JSON.stringify(out).length / 1024).toFixed(0), 'KB');
-console.log(measures.map((m) => `${m.id} ${m.rate.toFixed(1)} ${m.star}* toNext ${m.toNext} listSaves ${m.listSaves}`).join('\n'));
+console.log(measures.map((m) => `${m.id} ${m.rate.toFixed(1)} ${m.star}* toNext ${m.toNext} open ${m.open} onList ${m.onList}`).join('\n'));
 console.log(safetyMeasures.map((m) => `${m.id} ${m.num}/${m.den} ${m.rate.toFixed(1)} ${m.star}* toNext ${m.toNext} heading ${m.heading}`).join('\n'));
 console.log('lanes', laneCounts, 'faxes', faxes.length, 'changes', changes.map((c) => `${c.drug} ${c.count}/${c.high} grade ${c.grade}`).join(', '));

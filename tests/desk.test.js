@@ -84,6 +84,13 @@ describe('safety measures', () => {
 });
 
 describe('member letters', () => {
+  it('promise a transition fill only for removals and new prior authorization', () => {
+    for (const c of CHANGES_2027) {
+      const text = memberNotice(c, 'Rosa');
+      const promised = /one-time supply/.test(text);
+      expect(promised).toBe(c.short === 'Removed' || c.short === 'PA added');
+    }
+  });
   it('read at or below a sixth grade level', () => {
     for (const c of CHANGES_2027) {
       const text = memberNotice(c, 'Rosa').replace(/^Dear [^\n]+\n\n/, '');

@@ -3,7 +3,7 @@ import Plan from './ui/Plan.jsx';
 import SaveList from './ui/SaveList.jsx';
 import Safety from './ui/Safety.jsx';
 import Formulary from './ui/Formulary.jsx';
-import Proof from './ui/Proof.jsx';
+import Pilot from './ui/Pilot.jsx';
 import { dayLabel } from './ui/format.js';
 
 const TABS = [
@@ -45,7 +45,7 @@ export default function App() {
         </a>
         <nav className="tabs" aria-label="Sections">
           {TABS.map((t) => (
-            <a key={t.key} href={`#/${t.key}`} className={tab === t.key || (tab === 'proof' && t.key === 'plan') ? 'tab on' : 'tab'} aria-current={tab === t.key ? 'page' : undefined}><span className="long">{t.label}</span><span className="short">{t.short}</span></a>
+            <a key={t.key} href={`#/${t.key}`} className={tab === t.key || ((tab === 'pilot' || tab === 'proof') && t.key === 'plan') ? 'tab on' : 'tab'} aria-current={tab === t.key ? 'page' : undefined}><span className="long">{t.label}</span><span className="short">{t.short}</span></a>
           ))}
         </nav>
         <div className="planchip" title="Every member and claim on this desk is made up">
@@ -57,11 +57,11 @@ export default function App() {
         {tab === 'list' && <SaveList data={data} params={params} go={go} />}
         {tab === 'safety' && <Safety data={data} params={params} />}
         {tab === 'formulary' && <Formulary data={data} params={params} />}
-        {tab === 'proof' && <Proof data={data} go={go} />}
+        {(tab === 'pilot' || tab === 'proof') && <Pilot />}
       </main>
       <footer className="foot">
         <span>Synthetic plan and members. Measure rules and the latest published cut points from the CMS 2027 Star Ratings Technical Notes.</span>
-        <a href="#/proof">How it scored</a>
+        <a href="#/pilot">How a pilot would prove it</a>
       </footer>
     </div>
   );

@@ -2,10 +2,8 @@ import React from 'react';
 import { Stars, Track, NATIONAL } from './bits.jsx';
 
 function headline(measures) {
-  // Lead with a star the list can actually reach, otherwise the closest one.
+  // Lead with the measure closest to its next star.
   const open = measures.filter((m) => m.toNext > 0 && m.star < 5);
-  const reachable = open.filter((m) => m.listSaves >= m.toNext).sort((a, b) => a.star - b.star || a.toNext - b.toNext);
-  if (reachable.length) return reachable[0];
   open.sort((a, b) => a.toNext / a.weight - b.toNext / b.weight);
   return open[0];
 }
@@ -47,7 +45,8 @@ const LANE_ROWS = [
   { key: 'save', label: 'Call this month', tone: 'gold' },
   { key: 'prescriber', label: 'Ask the prescriber first', tone: 'slate' },
   { key: 'new-start', label: 'New starts, not counted yet', tone: 'teal' },
-  { key: 'onTrack', label: 'On track, no call needed', tone: 'calm', noLink: true },
+  { key: 'overflow', label: "At risk, past this month's calls", tone: 'gold', noLink: true },
+  { key: 'onTrack', label: 'On track', tone: 'calm', noLink: true },
   { key: 'lost', label: 'Below 80% for good this year', tone: 'muted' },
 ];
 
@@ -88,18 +87,15 @@ export default function Plan({ data, go }) {
         ) : (
           <h1>Every adherence measure is at 5 stars.</h1>
         )}
-        <p className="lede">
-          {h && h.listSaves >= 2 * h.toNext
-            ? `Today's ${data.plan.k} calls should save about ${h.listSaves} members there, more than twice the ${h.toNext} needed.`
-            : h && h.listSaves >= h.toNext
-              ? `Today's ${data.plan.k} calls should save about ${h.listSaves} members there, more than the ${h.toNext} needed.`
-              : `Today's ${data.plan.k} calls should save about ${h?.listSaves ?? 0} members there.`}
-        </p>
+        {h && (
+          <p className="lede">
+            This month's call list has {h.onList} {h.short.toLowerCase()} members who can still reach 80% by December 31.
+          </p>
+        )}
         <div className="actions">
           <button className="primary" onClick={() => go('list', h ? { measure: h.id } : undefined)}>Open the call list</button>
-          <a className="quiet" href="#/proof">How the list was tested</a>
+          <a className="quiet" href="#/pilot">How a pilot would prove it</a>
         </div>
-        <p className="sub assume">Planning estimate, assuming {Math.round(data.plan.reach * 100)}% of members answer.</p>
       </section>
       <Today data={data} go={go} />
       </div>
@@ -118,7 +114,7 @@ export default function Plan({ data, go }) {
           ))}
         </ul>
         <p className="note">
-          Adherence rates are the desk's forecast for December 31 from claims through September 30. Safety rates are part-year, as of today, and for opioids with benzos and two anticholinergics lower is better. Ticks mark the 2027 Star Ratings cut points, the latest published, standing in for the 2028 ratings this year's data feeds.
+          Adherence rates are projected to December 31 from each member's own refill pattern through September 30. The projection is a simple rule of thumb, and a pilot would measure how close it gets. Safety rates are part-year, as of today, and for opioids with benzos and two anticholinergics lower is better. Ticks mark the 2027 Star Ratings cut points, the latest published, standing in for the 2028 ratings this year's data feeds.
         </p>
       </section>
     </div>

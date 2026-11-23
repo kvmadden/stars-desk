@@ -37,6 +37,16 @@ The plans and the call effects are simulated. That makes this a test of the rank
 
 The method, the assumptions and what this does not show are in [docs/METHOD.md](docs/METHOD.md).
 
+## What it can't do
+
+- **It has never seen a real member.** Every number above comes from simulated plans and simulated call effects. Real reach and fix rates need a pilot with outreach logs.
+- **It names one barrier per drug.** Members with two barriers (cost and a refill routine, say) or with one the claims don't show get a single guess. On the harder held-out plans the guess matched the hidden barrier 55% of the time.
+- **It reads claims only.** No lab values, no diagnoses beyond the measure exclusions, no notes from earlier calls. A pharmacist on the phone still has to confirm the barrier.
+- **It doesn't know the 2028 cut points.** It uses the 2027 Star Ratings cut points, the latest published. The 2028 adherence measures may also add risk adjustment the desk doesn't model.
+- **It doesn't optimize for the plan's overall star rating.** It ranks members by expected saves weighted by measure weight. It does not model the summary rating, the reward factor or the improvement measures.
+- **Its suggestions are prompts, not orders.** Lower-cost options, switch notes and fax asks are for the prescriber's judgment, and switches depend on the indication, which claims don't show.
+- **Safety measures are part-year.** Opioid with benzodiazepine and anticholinergic overlap already past 30 days counts for this year no matter what the fax does.
+
 ## Run it
 
 ```bash

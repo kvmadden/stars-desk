@@ -59,7 +59,7 @@ export default function App() {
         {tab === 'proof' && <Proof data={data} go={go} />}
       </main>
       <footer className="foot">
-        <span>Synthetic plan and members. Measure rules and cut points from the CMS 2027 Star Ratings Technical Notes.</span>
+        <span>Synthetic plan and members. Measure rules and the latest published cut points from the CMS 2027 Star Ratings Technical Notes.</span>
         <a href="#/proof">How it scored</a>
       </footer>
     </div>

@@ -14,7 +14,8 @@ const uniqueDates = (fills) => new Set(fills.map((f) => f.day)).size;
 
 export function supdStatus(member, asOf) {
   const known = member.fills.filter((f) => f.day < asOf);
-  const dm = known.filter((f) => has(f, ADHERENCE.D08.ingredients));
+  // The SUPD diabetes list includes insulin, unlike the D08 adherence list.
+  const dm = known.filter((f) => has(f, [...ADHERENCE.D08.ingredients, ...ADHERENCE.D08.excludingIngredients]));
   if (member.age < 40 || member.age > 75 || uniqueDates(dm) < 2) return null;
   if (dm[0].day > YEAR_DAYS - 90) return null;
   if (member.hospice || member.esrd || member.safety.supdExcluded) return { state: 'excluded' };
@@ -60,13 +61,15 @@ export function achStatus(member, asOf) {
   if (qualifying.length === 0) return null;
   if (member.hospice) return { state: 'excluded' };
   if (qualifying.length < 2) return { state: 'clear' };
-  const [[d1, f1], [d2, f2]] = qualifying;
-  const s1 = daySet(f1, asOf);
-  const s2 = daySet(f2, asOf);
+  // Concurrent days: days on which two or more distinct qualifying drugs are on hand.
+  const perDay = new Map();
+  for (const [, fs] of qualifying) for (const d of daySet(fs, asOf)) perDay.set(d, (perDay.get(d) || 0) + 1);
   let overlap = 0;
-  for (const d of s1) if (s2.has(d)) overlap++;
-  const active = [f1, f2].every((fs) => fs[fs.length - 1].day + fs[fs.length - 1].daysSupply >= asOf - 7);
-  const base = { overlap, active, drugs: [d1, d2], prescribers: [...new Set([f1[f1.length - 1].prescriber, f2[f2.length - 1].prescriber])], suggestions: [d1, d2].map((d) => ({ drug: d, text: ACH_SUGGEST[d] })) };
+  for (const n of perDay.values()) if (n >= 2) overlap++;
+  const onHand = qualifying.filter(([, fs]) => fs[fs.length - 1].day + fs[fs.length - 1].daysSupply >= asOf - 7);
+  const active = onHand.length >= 2;
+  const drugs = qualifying.map(([d]) => d);
+  const base = { overlap, active, drugs, prescribers: [...new Set(qualifying.map(([, fs]) => fs[fs.length - 1].prescriber))], suggestions: drugs.map((d) => ({ drug: d, text: ACH_SUGGEST[d] })) };
   if (overlap >= 30) return { ...base, state: 'counted' };
   if (active) return { ...base, state: 'heading' };
   return { ...base, state: 'clear' };

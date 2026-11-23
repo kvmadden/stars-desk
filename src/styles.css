@@ -28,7 +28,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .app { min-height: 100vh; display: flex; flex-direction: column; }
 .top { display: flex; align-items: center; gap: 24px; padding: 12px 32px; background: var(--ink); color: #fff; position: sticky; top: 0; z-index: 5; }
-.brand { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; font-family: 'IBM Plex Serif', Georgia, serif; font-size: 20px; }
+.brand { min-height: 44px; display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; font-family: 'IBM Plex Serif', Georgia, serif; font-size: 20px; }
 .tabs { display: flex; gap: 4px; }
 .tab { color: #c9d1dc; text-decoration: none; padding: 10px 14px; border-radius: 8px; min-height: 44px; display: inline-flex; align-items: center; font-size: 15px; }
 .tab:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
@@ -38,7 +38,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 main { flex: 1; }
 .page { max-width: 1280px; margin: 0 auto; padding: 48px 32px 64px; }
 .foot { display: flex; justify-content: space-between; gap: 16px; padding: 16px 32px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
-.foot a { color: var(--ink); }
+.foot a { color: var(--ink); min-height: 44px; display: inline-flex; align-items: center; }
 
 .hero { max-width: 860px; margin-bottom: 48px; }
 .hero.small { margin-bottom: 32px; }
@@ -224,3 +224,5 @@ aside.today { background: var(--surface); border: 1px solid var(--line); border-
 .k.kgap { background: var(--brick-soft); }
 .k.ktoday { width: 3px; background: var(--ink); }
 .k.kfill { width: 4px; background: var(--gold); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.quiet { color: var(--ink); min-height: 44px; display: inline-flex; align-items: center; }

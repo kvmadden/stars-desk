@@ -40,11 +40,12 @@ describe('synthetic world', () => {
       }
     }
   });
-  it('never reads the hidden barrier when ranking', () => {
-    const m = w.members.find((x) => Object.keys(x.hidden.plans).length > 0);
-    const a = analyzeMember(m, 273);
-    const b = analyzeMember({ ...m, hidden: { archetype: 'steady', plans: {} } }, 273);
-    expect(b).toEqual(a);
+  it('never reads the hidden barrier or any fill after the as-of day', () => {
+    for (const m of w.members) {
+      const a = analyzeMember(m, 273);
+      const blind = { ...m, hidden: undefined, fills: m.fills.filter((x) => x.day < 273) };
+      expect(analyzeMember(blind, 273)).toEqual(a);
+    }
   });
 });
 
@@ -54,6 +55,11 @@ describe('safety measures', () => {
   it('counts 30 days of opioid and benzodiazepine overlap', () => {
     const fills = [fill(0, 'oxycodone'), fill(30, 'oxycodone'), fill(10, 'alprazolam'), fill(40, 'alprazolam')];
     expect(cobStatus({ ...base, fills }, 273).state).toBe('counted');
+  });
+  it('counts overlap across any two of three anticholinergics', () => {
+    const fills = [fill(0, 'oxybutynin'), fill(30, 'oxybutynin'), fill(100, 'amitriptyline'), fill(130, 'amitriptyline'), fill(110, 'hydroxyzine'), fill(140, 'hydroxyzine')];
+    // oxybutynin covers 0 to 59, so the pair that overlaps is amitriptyline with hydroxyzine
+    expect(achStatus({ ...base, fills }, 273).state).toBe('counted');
   });
   it('needs two fills of each anticholinergic', () => {
     const fills = [fill(0, 'oxybutynin'), fill(30, 'oxybutynin'), fill(0, 'amitriptyline')];

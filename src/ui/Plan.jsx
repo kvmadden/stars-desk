@@ -89,7 +89,10 @@ export default function Plan({ data, go }) {
         <p className="lede">
           The top {data.plan.k} calls on today's list should bring about {h?.listSaves ?? 0} there, if {Math.round(data.plan.reach * 100)}% of members answer.
         </p>
-        <button className="primary" onClick={() => go('list', h ? { measure: h.id } : undefined)}>Open the call list</button>
+        <div className="actions">
+          <button className="primary" onClick={() => go('list', h ? { measure: h.id } : undefined)}>Open the call list</button>
+          <a className="quiet" href="#/proof">How the list was tested</a>
+        </div>
       </section>
       <Today data={data} go={go} />
       </div>
@@ -108,7 +111,7 @@ export default function Plan({ data, go }) {
           ))}
         </ul>
         <p className="note">
-          Adherence rates are the desk's forecast for December 31 from claims through September 30. Safety rates are as of today. Ticks mark the 2027 Star Ratings cut points.
+          Adherence rates are the desk's forecast for December 31 from claims through September 30. Safety rates are as of today. Safety rates are part-year. Ticks mark the 2027 Star Ratings cut points, the latest published, standing in for the 2028 ratings this year's data feeds.
         </p>
       </section>
     </div>

@@ -6,7 +6,7 @@ const SCRIPT = {
   ninety: 'Offer a 90-day supply with auto-refill. If the prescription is written for 30 days, ask the prescriber for 90.',
   steady: 'Set up auto-refill at the pharmacy they use most.',
   sync: 'Move refills to one pharmacy and line the dates up so everything is ready on one trip.',
-  costfix: 'Ask about cost first. Offer to ask the prescriber about a lower-tier option, check for Extra Help, and explain the Medicare Prescription Payment Plan.',
+  costfix: 'Ask about cost first. Offer to ask the prescriber about a lower-tier option suited to the indication, and check for Extra Help.',
   restart: 'Ask how the medicine went. If side effects stopped it, offer to contact the prescriber about another option.',
   confirm: 'Check with the prescriber before calling the member. If the change was intended, no refill push.',
   reminder: 'A refill reminder, and one open question about what makes refills hard.',
@@ -48,6 +48,9 @@ function MeasureCard({ row, asOf }) {
           </div>
           <ul className="why">{row.why.map((w) => <li key={w}>{w}</li>)}</ul>
           <p>{SCRIPT[row.fix.key]}</p>
+          {row.fix.key === 'costfix' && row.copay30 >= 100 && !row.capReached && (
+            <p className="callout">At ${row.copay30} a month, the Medicare Prescription Payment Plan can spread the cost over the year. It does not lower the total.</p>
+          )}
           {row.capReached && row.fix.key === 'costfix' && (
             <p className="callout">This member already reached the $2,100 yearly cap, so the rest of 2026 costs $0. Tell them.</p>
           )}

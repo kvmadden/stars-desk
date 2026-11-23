@@ -37,7 +37,9 @@ export const DRUGS = {
   repaglinide: { measure: 'D08', tier: 2, strengths: ['1 mg'] },
 };
 
-// Same-class, lower-tier alternatives a pharmacist would raise with the prescriber when cost is the barrier.
+// Simulation mechanics only: the drug a cost fix moves a simulated member to. Never shown as advice.
+// A real switch depends on the indication (an SGLT2 inhibitor for heart failure or kidney disease,
+// Beers 2023 cautions on sulfonylureas in older adults), which the desk leaves to the prescriber.
 export const LOWER_COST = {
   pitavastatin: ['atorvastatin', 'rosuvastatin'],
   lovastatin: ['atorvastatin', 'pravastatin'],
@@ -72,8 +74,8 @@ export const ANTICHOLINERGICS = ['oxybutynin', 'amitriptyline', 'paroxetine', 'h
 export const ACH_SUGGEST = {
   oxybutynin: 'For overactive bladder, consider mirabegron, which is not anticholinergic, or behavioral measures.',
   tolterodine: 'For overactive bladder, consider mirabegron, which is not anticholinergic, or behavioral measures.',
-  amitriptyline: 'If used for sleep or neuropathic pain, consider a non-anticholinergic option suited to the indication.',
-  paroxetine: 'If an SSRI is still needed, consider sertraline or escitalopram, which carry less anticholinergic burden.',
+  amitriptyline: 'If used for sleep or neuropathic pain, consider a non-anticholinergic option suited to the indication, with a gradual taper.',
+  paroxetine: 'If an SSRI is still needed, consider sertraline or escitalopram, which carry less anticholinergic burden. Cross-taper to avoid discontinuation symptoms.',
   hydroxyzine: 'For itch, consider a non-sedating antihistamine. For anxiety, reassess the indication.',
   cyclobenzaprine: 'Reassess ongoing need. Muscle relaxants are poorly tolerated in older adults.',
   meclizine: 'Reassess ongoing need for daily use.',

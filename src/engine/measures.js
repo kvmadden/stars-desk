@@ -1,6 +1,8 @@
 // Part D measure definitions used by the desk.
 // Source: CMS, Medicare 2027 Part C & D Star Ratings Technical Notes (last updated 11/04/2026),
 // measures D08 to D13 and Attachment L. Cut points are the MA-PD rows. See docs/SOURCES.md.
+// The 2027 ratings are built on 2025 data. A 2026 plan year feeds the 2028 ratings, whose cut points
+// are not published yet, so the latest published cut points stand in for them.
 
 export const YEAR = 2026;
 export const YEAR_DAYS = 365; // 2026 is not a leap year

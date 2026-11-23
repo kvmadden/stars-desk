@@ -1,7 +1,8 @@
 // January 1, 2027 formulary changes for the synthetic plan, and who they put at risk.
 // The changes are this demo plan's, not any real plan's. The transition rule is federal:
 // 42 CFR 423.120(b)(3) requires a temporary supply of at least a month within the first 90 days
-// for current enrollees affected by formulary changes.
+// for drugs that leave the formulary or gain prior authorization or step therapy. A tier change
+// alone does not qualify, so those members are pointed to an exception request instead.
 import { ADHERENCE } from './measures.js';
 import { targetFills } from './pdc.js';
 
@@ -17,7 +18,7 @@ export const TIMELINE_2027 = [
   { date: 'Sep 30', label: 'Annual notice of change mailed' },
   { date: 'Oct to Dec', label: 'Switch or file an exception before January' },
   { date: 'Jan 1', label: 'Changes take effect' },
-  { date: 'Jan 1 to Mar 31', label: 'Transition fill window (first 90 days)' },
+  { date: 'Jan 1 to Mar 31', label: 'Transition fill window for removals and new PA' },
   { date: 'After the fill', label: 'Gap risk if nothing changed' },
 ];
 
@@ -62,7 +63,9 @@ export function memberNotice(change, firstName) {
     `On January 1, your plan will change how it covers ${change.drug}. ${change.short === 'Removed' ? 'It will no longer be on our drug list.' : change.short === 'PA added' ? 'Your doctor will need to ask us to approve it first.' : 'It will cost more.'}`,
     `You do not need to stop taking it today. Please talk to your doctor before January.`,
     `Your doctor may switch you to ${alt}, which is covered. We have sent your doctor a note about this.`,
-    `If you still have ${change.drug} in January, we will cover a one-time supply of at least one month in the first 90 days. This gives you time to make a plan.`,
+    change.short === 'Removed' || change.short === 'PA added'
+      ? `If you still need ${change.drug} in January, we will cover a one-time supply of at least one month in the first 90 days. This gives you time to make a plan.`
+      : `If the new cost is too high, your doctor can ask us for an exception.`,
     `Questions? Call the pharmacist line on the back of your card.`,
   ].join('\n\n');
 }

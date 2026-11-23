@@ -7,7 +7,7 @@ import { safetyBoard } from '../src/engine/safety.js';
 import { formularyImpact, memberNotice, fleschKincaid, TIMELINE_2027 } from '../src/engine/formulary.js';
 import { targetFills } from '../src/engine/pdc.js';
 
-const SEED = 101;
+const SEED = 201; // a plan the rules were never tuned on
 const AS_OF = 273; // October 1, 2026
 const K = 500;
 const REACH = 0.6; // planning assumption, same as the evaluation
@@ -133,6 +133,15 @@ for (const set of ['dev', 'holdout']) {
   if (existsSync(f)) {
     const r = JSON.parse(readFileSync(f, 'utf8'));
     evalResults[set] = { seeds: r.seeds, totals: r.totals, calls: r.calls, per100: r.per100, confusion: r.confusion, truth: r.truth, setup: r.setup, grid: r.grid };
+  }
+}
+const amend = `${root}eval/results/holdout-amendment-gapbudget.json`;
+if (evalResults.holdout && existsSync(amend)) {
+  const a = JSON.parse(readFileSync(amend, 'utf8'));
+  if (a.reproduced) {
+    evalResults.holdout.per100.gapBudget = a.per100.gapBudget;
+    evalResults.holdout.grid = evalResults.holdout.grid.map((g, i) => ({ ...g, gained: { ...g.gained, gapBudget: a.grid[i].gained.gapBudget } }));
+    evalResults.holdout.amended = true;
   }
 }
 

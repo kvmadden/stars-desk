@@ -1,0 +1,138 @@
+{
+ "note": "Extra conditions on frozen v2 held-out plans. Desk unchanged.",
+ "conditions": [
+  {
+   "label": "November 1 start",
+   "asOf": 304,
+   "k": 500,
+   "perDay": 25,
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "per100": {
+    "none": 0,
+    "gapBudget": 12.7,
+    "closestFirst": 8.9,
+    "deskOrderOnly": 14.7,
+    "desk": 27.1
+   },
+   "totals": {
+    "none": 0,
+    "gapBudget": 190,
+    "closestFirst": 133,
+    "deskOrderOnly": 220,
+    "desk": 406
+   },
+   "calls": {
+    "none": 0,
+    "gapBudget": 1500,
+    "closestFirst": 1500,
+    "deskOrderOnly": 1500,
+    "desk": 1500
+   }
+  },
+  {
+   "label": "December 1 start",
+   "asOf": 334,
+   "k": 500,
+   "perDay": 25,
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "per100": {
+    "none": 0,
+    "gapBudget": 7.1,
+    "closestFirst": 4.1,
+    "deskOrderOnly": 8.6,
+    "desk": 16.2
+   },
+   "totals": {
+    "none": 0,
+    "gapBudget": 106,
+    "closestFirst": 61,
+    "deskOrderOnly": 129,
+    "desk": 243
+   },
+   "calls": {
+    "none": 0,
+    "gapBudget": 1500,
+    "closestFirst": 1500,
+    "deskOrderOnly": 1500,
+    "desk": 1500
+   }
+  },
+  {
+   "label": "October 1, low reach (30%)",
+   "asOf": 273,
+   "k": 500,
+   "perDay": 25,
+   "truth": {
+    "reach": 0.3,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "per100": {
+    "none": 0,
+    "gapBudget": 7.1,
+    "closestFirst": 6.6,
+    "deskOrderOnly": 8.2,
+    "desk": 14
+   },
+   "totals": {
+    "none": 0,
+    "gapBudget": 107,
+    "closestFirst": 99,
+    "deskOrderOnly": 123,
+    "desk": 210
+   },
+   "calls": {
+    "none": 0,
+    "gapBudget": 1500,
+    "closestFirst": 1500,
+    "deskOrderOnly": 1500,
+    "desk": 1500
+   }
+  },
+  {
+   "label": "October 1, 150 calls only",
+   "asOf": 273,
+   "k": 150,
+   "perDay": 25,
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "per100": {
+    "none": 0,
+    "gapBudget": 8.9,
+    "closestFirst": 14,
+    "deskOrderOnly": 14.9,
+    "desk": 32.4
+   },
+   "totals": {
+    "none": 0,
+    "gapBudget": 40,
+    "closestFirst": 63,
+    "deskOrderOnly": 67,
+    "desk": 146
+   },
+   "calls": {
+    "none": 0,
+    "gapBudget": 450,
+    "closestFirst": 450,
+    "deskOrderOnly": 450,
+    "desk": 450
+   }
+  }
+ ],
+ "ranAt": "2026-11-23T03:28:54.711Z"
+}

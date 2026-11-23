@@ -37,6 +37,20 @@ The plans and the call effects are simulated. That makes this a test of the rank
 
 The method, the assumptions and what this does not show are in [docs/METHOD.md](docs/METHOD.md).
 
+### Harder conditions
+
+The same frozen held-out plans, started later or with fewer resources. The desk is unchanged. Per 100 calls:
+
+| Condition | Strongest plain list | Desk |
+| --- | --- | --- |
+| October 1 start (main result) | 12.5 | 27.1 |
+| November 1 start | 12.7 | 27.1 |
+| December 1 start | 7.1 | 16.2 |
+| October 1, only 30% of members answer | 7.1 | 14.0 |
+| October 1, only 150 calls | 14.0 | 32.4 |
+
+The strongest plain list is whichever plain list scored best in that condition: fewest missed days left first, except with 150 calls, where closest to 80% first did better. By December most members who will miss 80% already have, so every list saves fewer. The desk keeps about twice the strongest plain list in every condition. Source: `eval/results/stress-holdout2.json`.
+
 ## What it can't do
 
 - **It has never seen a real member.** Every number above comes from simulated plans and simulated call effects. Real reach and fix rates need a pilot with outreach logs.

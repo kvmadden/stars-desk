@@ -37,7 +37,7 @@ if (set === 'holdout') {
   seeds = freeze.seeds;
 }
 
-const ARMS = ['none', 'lowestFirst', 'closestFirst', 'mostOverdue', 'deskOrderOnly', 'desk'];
+const ARMS = ['none', 'lowestFirst', 'closestFirst', 'mostOverdue', 'gapBudget', 'deskOrderOnly', 'desk'];
 const main = { seeds: [], totals: {}, calls: {} };
 const confusion = {};
 const grid = GRID.map((t) => ({ truth: t, gained: Object.fromEntries(ARMS.map((a) => [a, 0])) }));
@@ -65,7 +65,7 @@ const per100 = Object.fromEntries(ARMS.map((a) => [a, main.calls[a] ? (100 * mai
 const result = { set, params: params.name, setup: SETUP, truth: TRUTH, seeds, totals: main.totals, calls: main.calls, per100, perSeed: main.seeds, confusion, grid, ranAt: new Date().toISOString() };
 writeFileSync(`${resultsDir}/${set}.json`, JSON.stringify(result, null, 1));
 console.log('per 100 calls', Object.fromEntries(Object.entries(per100).map(([k, v]) => [k, v.toFixed(1)])));
-const wins = grid.filter((g) => g.gained.desk > g.gained.closestFirst).length;
-const orderWins = grid.filter((g) => g.gained.deskOrderOnly > g.gained.closestFirst).length;
-console.log(`grid: desk beats closest-to-80 in ${wins} of ${grid.length}, ordering alone in ${orderWins} of ${grid.length}`);
+const wins = grid.filter((g) => g.gained.desk > g.gained.gapBudget).length;
+const orderWins = grid.filter((g) => g.gained.deskOrderOnly > g.gained.gapBudget).length;
+console.log(`grid: desk beats gap-budget list in ${wins} of ${grid.length}, ordering alone in ${orderWins} of ${grid.length}`);
 console.log('confusion (true -> guessed)', JSON.stringify(confusion));

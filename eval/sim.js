@@ -66,19 +66,24 @@ export function baselines(world, asOf) {
   for (const m of world.members) {
     let minPdc = null;
     let maxLate = 0;
+    let minBudget = null;
     for (const meas of Object.values(ADHERENCE)) {
       const s = statusAsOf(meas, m, asOf);
       if (!s || s.state === 'excluded' || s.state === 'too-late' || s.uniqueDates < 2) continue;
       if (minPdc == null || s.pdcToDate < minPdc) minPdc = s.pdcToDate;
       maxLate = Math.max(maxLate, s.daysSinceRunOut);
+      if (s.state === 'open' && (minBudget == null || s.budget < minBudget)) minBudget = s.budget;
     }
-    rows.push({ id: m.id, minPdc, maxLate });
+    rows.push({ id: m.id, minPdc, maxLate, minBudget });
   }
   const under = rows.filter((r) => r.minPdc != null && r.minPdc < 0.8);
   return {
     lowestFirst: [...under].sort((a, b) => a.minPdc - b.minPdc).map((r) => r.id),
     closestFirst: [...under].sort((a, b) => b.minPdc - a.minPdc).map((r) => r.id),
     mostOverdue: rows.filter((r) => r.maxLate > 0).sort((a, b) => b.maxLate - a.maxLate).map((r) => r.id),
+    // What a capable adherence team already does: skip members who cannot reach 80%,
+    // and call those with the fewest allowable missed days left first.
+    gapBudget: rows.filter((r) => r.minBudget != null).sort((a, b) => a.minBudget - b.minBudget).map((r) => r.id),
   };
 }
 
@@ -98,11 +103,13 @@ export function runWorld(world, P, opts) {
     lowestFirst: { calls: b.lowestFirst.slice(0, k), deliveredFor: generic },
     closestFirst: { calls: b.closestFirst.slice(0, k), deliveredFor: generic },
     mostOverdue: { calls: b.mostOverdue.slice(0, k), deliveredFor: generic },
+    gapBudget: { calls: b.gapBudget.slice(0, k), deliveredFor: generic },
     deskOrderOnly: { calls: desk, deliveredFor: generic },
     desk: { calls: desk, deliveredFor: deskFix },
   };
   const out = {};
   for (const [name, arm] of Object.entries(arms)) {
+    if (opts.only && !opts.only.includes(name)) continue;
     out[name] = { calls: arm.calls.length, measures: scoreYear(world, P, arm.calls, { asOf, perDay, truth, deliveredFor: arm.deliveredFor }) };
   }
   // Barrier guesses against the hidden truth, for members the desk would call.

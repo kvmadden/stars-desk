@@ -1,0 +1,379 @@
+{
+ "reason": "Independent review asked for a gap-budget comparison list. Desk unchanged.",
+ "reproduced": true,
+ "totals": {
+  "none": 0,
+  "gapBudget": 153,
+  "deskOrderOnly": 158,
+  "desk": 369
+ },
+ "calls": {
+  "none": 0,
+  "gapBudget": 1500,
+  "deskOrderOnly": 1500,
+  "desk": 1500
+ },
+ "per100": {
+  "none": 0,
+  "gapBudget": 10.2,
+  "deskOrderOnly": 10.533333333333333,
+  "desk": 24.6
+ },
+ "wins": 27,
+ "orderWins": 24,
+ "gridSize": 27,
+ "grid": [
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 39,
+    "desk": 202,
+    "deskOrderOnly": 41
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 81,
+    "desk": 209,
+    "deskOrderOnly": 82
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 157,
+    "desk": 215,
+    "deskOrderOnly": 164
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 39,
+    "desk": 216,
+    "deskOrderOnly": 41
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 84,
+    "desk": 222,
+    "deskOrderOnly": 86
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 167,
+    "desk": 228,
+    "deskOrderOnly": 176
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 39,
+    "desk": 239,
+    "deskOrderOnly": 41
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 90,
+    "desk": 245,
+    "deskOrderOnly": 93
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 177,
+    "desk": 252,
+    "deskOrderOnly": 190
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 70,
+    "desk": 329,
+    "deskOrderOnly": 70
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 143,
+    "desk": 340,
+    "deskOrderOnly": 147
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 241,
+    "desk": 351,
+    "deskOrderOnly": 251
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 70,
+    "desk": 359,
+    "deskOrderOnly": 70
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 153,
+    "desk": 369,
+    "deskOrderOnly": 158
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 260,
+    "desk": 380,
+    "deskOrderOnly": 272
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 70,
+    "desk": 390,
+    "deskOrderOnly": 70
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 161,
+    "desk": 398,
+    "deskOrderOnly": 167
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 273,
+    "desk": 410,
+    "deskOrderOnly": 292
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 103,
+    "desk": 432,
+    "deskOrderOnly": 107
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 188,
+    "desk": 443,
+    "deskOrderOnly": 202
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 312,
+    "desk": 455,
+    "deskOrderOnly": 329
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 103,
+    "desk": 468,
+    "deskOrderOnly": 107
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 203,
+    "desk": 478,
+    "deskOrderOnly": 217
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 337,
+    "desk": 490,
+    "deskOrderOnly": 357
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "gapBudget": 103,
+    "desk": 507,
+    "deskOrderOnly": 107
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "gapBudget": 215,
+    "desk": 515,
+    "deskOrderOnly": 228
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "gapBudget": 359,
+    "desk": 528,
+    "deskOrderOnly": 383
+   }
+  }
+ ],
+ "ranAt": "2026-11-23T02:56:18.431Z"
+}

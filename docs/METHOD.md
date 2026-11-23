@@ -40,6 +40,10 @@ Held-out means new settings for the same generator, not a new generator. The bar
 
 **Amendment.** After the held-out run, an independent review asked for one more comparison list: members who can still reach 80%, fewest allowable missed days first. That is how a capable adherence team already sorts. The desk did not change. `eval/holdout-amendment.mjs` scores only that list on the frozen plans and confirms the desk's held-out numbers reproduce exactly.
 
+## Version 2
+
+The independent review pointed out that version 1 plans made the "therapy changed" rule look better than real claims would, since ezetimibe and amlodipine only appeared after a true switch. Version 2 plans add add-on therapy in members who never switched, members with two barriers at once (refill routine and cost), and members whose barrier no fix reaches. The switch rule now needs a new non-target drug and a stop of more than two weeks. A new held-out plan set was written by a separate agent, hashed in `eval/holdout2/FREEZE.json` and scored once with `node eval/run-eval.mjs holdout2`. Version 2 is the headline result. Version 1 stays on record.
+
 ## What this does and does not show
 
 It shows that, given these refill mechanics, triage by deadline and gap budget beats the plain lists, and that guessing the barrier from claims adds more on top. It does not show real reach or fix rates. Those come from a pilot with outreach logs, which is the first thing to measure.
@@ -48,8 +52,7 @@ The plan is synthetic and so is the barrier model, so a clean held-out result is
 
 ## Known limits
 
-- In the synthetic plan, ezetimibe and amlodipine appear only when a member truly switched. In real claims they are common add-on therapy, so the "therapy changed" rule would fire too often and needs a check that the target drug actually stopped.
-- Every simulated member has one barrier from a fixed set. Real members can have several, or none the claims show.
+- The rulebook names one barrier per drug. Version 2 members can have two, or one no fix reaches, and the barrier match drops to 55% on held-out. A second-barrier prompt in the call script is the next rule to add.
 - Days since run-out ignores supply carried forward from early refills.
 - Safety rates are part-year, compared against full-year cut points.
 - The synthetic plan models hospice and cancer for COB, not sickle cell disease or palliative care.

@@ -1,0 +1,1027 @@
+{
+ "set": "holdout",
+ "params": "holdout",
+ "setup": {
+  "asOf": 273,
+  "k": 500,
+  "perDay": 25
+ },
+ "truth": {
+  "reach": 0.6,
+  "pFix": 0.55,
+  "pGeneric": 0.25,
+  "pDiscover": 0.35
+ },
+ "seeds": [
+  9001,
+  9002,
+  9003
+ ],
+ "totals": {
+  "none": 0,
+  "lowestFirst": 38,
+  "closestFirst": 115,
+  "mostOverdue": 38,
+  "deskOrderOnly": 158,
+  "desk": 369
+ },
+ "calls": {
+  "none": 0,
+  "lowestFirst": 1500,
+  "closestFirst": 1500,
+  "mostOverdue": 1500,
+  "deskOrderOnly": 1500,
+  "desk": 1500
+ },
+ "per100": {
+  "none": 0,
+  "lowestFirst": 2.533333333333333,
+  "closestFirst": 7.666666666666667,
+  "mostOverdue": 2.533333333333333,
+  "deskOrderOnly": 10.533333333333333,
+  "desk": 24.6
+ },
+ "perSeed": [
+  {
+   "seed": 9001,
+   "arms": {
+    "none": {
+     "calls": 0,
+     "gained": 0,
+     "per100": 0,
+     "per": {
+      "D08": {
+       "num": 1584,
+       "den": 1716,
+       "rate": 92.3076923076923,
+       "star": 4,
+       "gained": 0
+      },
+      "D09": {
+       "num": 3308,
+       "den": 3680,
+       "rate": 89.8913043478261,
+       "star": 4,
+       "gained": 0
+      },
+      "D10": {
+       "num": 3597,
+       "den": 3966,
+       "rate": 90.69591527987897,
+       "star": 4,
+       "gained": 0
+      }
+     }
+    },
+    "lowestFirst": {
+     "calls": 500,
+     "gained": 13,
+     "per100": 2.6,
+     "per": {
+      "D08": {
+       "num": 1586,
+       "den": 1716,
+       "rate": 92.42424242424242,
+       "star": 4,
+       "gained": 2
+      },
+      "D09": {
+       "num": 3313,
+       "den": 3680,
+       "rate": 90.02717391304348,
+       "star": 4,
+       "gained": 5
+      },
+      "D10": {
+       "num": 3603,
+       "den": 3966,
+       "rate": 90.84720121028744,
+       "star": 4,
+       "gained": 6
+      }
+     }
+    },
+    "closestFirst": {
+     "calls": 500,
+     "gained": 42,
+     "per100": 8.4,
+     "per": {
+      "D08": {
+       "num": 1589,
+       "den": 1716,
+       "rate": 92.5990675990676,
+       "star": 5,
+       "gained": 5
+      },
+      "D09": {
+       "num": 3329,
+       "den": 3680,
+       "rate": 90.46195652173913,
+       "star": 4,
+       "gained": 21
+      },
+      "D10": {
+       "num": 3613,
+       "den": 3966,
+       "rate": 91.09934442763489,
+       "star": 4,
+       "gained": 16
+      }
+     }
+    },
+    "mostOverdue": {
+     "calls": 500,
+     "gained": 15,
+     "per100": 3,
+     "per": {
+      "D08": {
+       "num": 1587,
+       "den": 1716,
+       "rate": 92.48251748251748,
+       "star": 4,
+       "gained": 3
+      },
+      "D09": {
+       "num": 3312,
+       "den": 3680,
+       "rate": 90,
+       "star": 4,
+       "gained": 4
+      },
+      "D10": {
+       "num": 3605,
+       "den": 3966,
+       "rate": 90.89762985375694,
+       "star": 4,
+       "gained": 8
+      }
+     }
+    },
+    "deskOrderOnly": {
+     "calls": 500,
+     "gained": 58,
+     "per100": 11.6,
+     "per": {
+      "D08": {
+       "num": 1591,
+       "den": 1716,
+       "rate": 92.71561771561771,
+       "star": 5,
+       "gained": 7
+      },
+      "D09": {
+       "num": 3333,
+       "den": 3680,
+       "rate": 90.57065217391305,
+       "star": 4,
+       "gained": 25
+      },
+      "D10": {
+       "num": 3623,
+       "den": 3966,
+       "rate": 91.35148764498236,
+       "star": 4,
+       "gained": 26
+      }
+     }
+    },
+    "desk": {
+     "calls": 500,
+     "gained": 126,
+     "per100": 25.2,
+     "per": {
+      "D08": {
+       "num": 1598,
+       "den": 1716,
+       "rate": 93.12354312354313,
+       "star": 5,
+       "gained": 14
+      },
+      "D09": {
+       "num": 3366,
+       "den": 3680,
+       "rate": 91.46739130434783,
+       "star": 4,
+       "gained": 58
+      },
+      "D10": {
+       "num": 3651,
+       "den": 3966,
+       "rate": 92.05748865355523,
+       "star": 4,
+       "gained": 54
+      }
+     }
+    }
+   }
+  },
+  {
+   "seed": 9002,
+   "arms": {
+    "none": {
+     "calls": 0,
+     "gained": 0,
+     "per100": 0,
+     "per": {
+      "D08": {
+       "num": 1561,
+       "den": 1720,
+       "rate": 90.75581395348837,
+       "star": 4,
+       "gained": 0
+      },
+      "D09": {
+       "num": 3262,
+       "den": 3644,
+       "rate": 89.51701427003293,
+       "star": 4,
+       "gained": 0
+      },
+      "D10": {
+       "num": 3602,
+       "den": 3942,
+       "rate": 91.37493658041603,
+       "star": 4,
+       "gained": 0
+      }
+     }
+    },
+    "lowestFirst": {
+     "calls": 500,
+     "gained": 10,
+     "per100": 2,
+     "per": {
+      "D08": {
+       "num": 1563,
+       "den": 1720,
+       "rate": 90.87209302325581,
+       "star": 4,
+       "gained": 2
+      },
+      "D09": {
+       "num": 3265,
+       "den": 3644,
+       "rate": 89.5993413830955,
+       "star": 4,
+       "gained": 3
+      },
+      "D10": {
+       "num": 3607,
+       "den": 3942,
+       "rate": 91.5017757483511,
+       "star": 4,
+       "gained": 5
+      }
+     }
+    },
+    "closestFirst": {
+     "calls": 500,
+     "gained": 38,
+     "per100": 7.6,
+     "per": {
+      "D08": {
+       "num": 1573,
+       "den": 1720,
+       "rate": 91.45348837209302,
+       "star": 4,
+       "gained": 12
+      },
+      "D09": {
+       "num": 3275,
+       "den": 3644,
+       "rate": 89.87376509330406,
+       "star": 4,
+       "gained": 13
+      },
+      "D10": {
+       "num": 3615,
+       "den": 3943,
+       "rate": 91.68146081663708,
+       "star": 4,
+       "gained": 13
+      }
+     }
+    },
+    "mostOverdue": {
+     "calls": 500,
+     "gained": 9,
+     "per100": 1.8,
+     "per": {
+      "D08": {
+       "num": 1564,
+       "den": 1720,
+       "rate": 90.93023255813954,
+       "star": 4,
+       "gained": 3
+      },
+      "D09": {
+       "num": 3265,
+       "den": 3644,
+       "rate": 89.5993413830955,
+       "star": 4,
+       "gained": 3
+      },
+      "D10": {
+       "num": 3605,
+       "den": 3942,
+       "rate": 91.45104008117707,
+       "star": 4,
+       "gained": 3
+      }
+     }
+    },
+    "deskOrderOnly": {
+     "calls": 500,
+     "gained": 48,
+     "per100": 9.6,
+     "per": {
+      "D08": {
+       "num": 1575,
+       "den": 1720,
+       "rate": 91.56976744186046,
+       "star": 4,
+       "gained": 14
+      },
+      "D09": {
+       "num": 3279,
+       "den": 3644,
+       "rate": 89.98353457738749,
+       "star": 4,
+       "gained": 17
+      },
+      "D10": {
+       "num": 3619,
+       "den": 3943,
+       "rate": 91.78290641643419,
+       "star": 4,
+       "gained": 17
+      }
+     }
+    },
+    "desk": {
+     "calls": 500,
+     "gained": 114,
+     "per100": 22.8,
+     "per": {
+      "D08": {
+       "num": 1583,
+       "den": 1720,
+       "rate": 92.03488372093024,
+       "star": 4,
+       "gained": 22
+      },
+      "D09": {
+       "num": 3308,
+       "den": 3644,
+       "rate": 90.77936333699232,
+       "star": 4,
+       "gained": 46
+      },
+      "D10": {
+       "num": 3648,
+       "den": 3943,
+       "rate": 92.51838701496322,
+       "star": 5,
+       "gained": 46
+      }
+     }
+    }
+   }
+  },
+  {
+   "seed": 9003,
+   "arms": {
+    "none": {
+     "calls": 0,
+     "gained": 0,
+     "per100": 0,
+     "per": {
+      "D08": {
+       "num": 1520,
+       "den": 1647,
+       "rate": 92.2890103217972,
+       "star": 4,
+       "gained": 0
+      },
+      "D09": {
+       "num": 3325,
+       "den": 3705,
+       "rate": 89.74358974358974,
+       "star": 4,
+       "gained": 0
+      },
+      "D10": {
+       "num": 3661,
+       "den": 4073,
+       "rate": 89.88460594156642,
+       "star": 4,
+       "gained": 0
+      }
+     }
+    },
+    "lowestFirst": {
+     "calls": 500,
+     "gained": 15,
+     "per100": 3,
+     "per": {
+      "D08": {
+       "num": 1525,
+       "den": 1648,
+       "rate": 92.5364077669903,
+       "star": 5,
+       "gained": 5
+      },
+      "D09": {
+       "num": 3329,
+       "den": 3705,
+       "rate": 89.85155195681511,
+       "star": 4,
+       "gained": 4
+      },
+      "D10": {
+       "num": 3667,
+       "den": 4073,
+       "rate": 90.03191750552418,
+       "star": 4,
+       "gained": 6
+      }
+     }
+    },
+    "closestFirst": {
+     "calls": 500,
+     "gained": 35,
+     "per100": 7,
+     "per": {
+      "D08": {
+       "num": 1527,
+       "den": 1648,
+       "rate": 92.65776699029126,
+       "star": 5,
+       "gained": 7
+      },
+      "D09": {
+       "num": 3338,
+       "den": 3705,
+       "rate": 90.0944669365722,
+       "star": 4,
+       "gained": 13
+      },
+      "D10": {
+       "num": 3676,
+       "den": 4074,
+       "rate": 90.23073146784488,
+       "star": 4,
+       "gained": 15
+      }
+     }
+    },
+    "mostOverdue": {
+     "calls": 500,
+     "gained": 14,
+     "per100": 2.8,
+     "per": {
+      "D08": {
+       "num": 1522,
+       "den": 1648,
+       "rate": 92.35436893203884,
+       "star": 4,
+       "gained": 2
+      },
+      "D09": {
+       "num": 3331,
+       "den": 3705,
+       "rate": 89.9055330634278,
+       "star": 4,
+       "gained": 6
+      },
+      "D10": {
+       "num": 3667,
+       "den": 4073,
+       "rate": 90.03191750552418,
+       "star": 4,
+       "gained": 6
+      }
+     }
+    },
+    "deskOrderOnly": {
+     "calls": 500,
+     "gained": 52,
+     "per100": 10.4,
+     "per": {
+      "D08": {
+       "num": 1527,
+       "den": 1647,
+       "rate": 92.71402550091075,
+       "star": 5,
+       "gained": 7
+      },
+      "D09": {
+       "num": 3350,
+       "den": 3705,
+       "rate": 90.41835357624831,
+       "star": 4,
+       "gained": 25
+      },
+      "D10": {
+       "num": 3681,
+       "den": 4073,
+       "rate": 90.37564448809232,
+       "star": 4,
+       "gained": 20
+      }
+     }
+    },
+    "desk": {
+     "calls": 500,
+     "gained": 129,
+     "per100": 25.8,
+     "per": {
+      "D08": {
+       "num": 1541,
+       "den": 1647,
+       "rate": 93.56405585913782,
+       "star": 5,
+       "gained": 21
+      },
+      "D09": {
+       "num": 3380,
+       "den": 3705,
+       "rate": 91.2280701754386,
+       "star": 4,
+       "gained": 55
+      },
+      "D10": {
+       "num": 3714,
+       "den": 4073,
+       "rate": 91.18585808986005,
+       "star": 4,
+       "gained": 53
+      }
+     }
+    }
+   }
+  }
+ ],
+ "confusion": {
+  "cost": {
+   "cost": 322,
+   "sideEffect": 37,
+   "forgetful": 2
+  },
+  "logistics": {
+   "logistics": 748,
+   "cost": 73,
+   "sideEffect": 10
+  },
+  "sideEffect": {
+   "sideEffect": 41,
+   "unclear": 4,
+   "forgetful": 3
+  },
+  "forgetful": {
+   "cost": 22,
+   "forgetful": 358,
+   "sideEffect": 4
+  },
+  "steady": {
+   "forgetful": 67,
+   "logistics": 13,
+   "cost": 5
+  }
+ },
+ "grid": [
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 7,
+    "closestFirst": 26,
+    "mostOverdue": 10,
+    "deskOrderOnly": 41,
+    "desk": 202
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 22,
+    "closestFirst": 57,
+    "mostOverdue": 17,
+    "deskOrderOnly": 82,
+    "desk": 209
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 40,
+    "closestFirst": 114,
+    "mostOverdue": 30,
+    "deskOrderOnly": 164,
+    "desk": 215
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 7,
+    "closestFirst": 26,
+    "mostOverdue": 10,
+    "deskOrderOnly": 41,
+    "desk": 216
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 21,
+    "closestFirst": 61,
+    "mostOverdue": 18,
+    "deskOrderOnly": 86,
+    "desk": 222
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 40,
+    "closestFirst": 128,
+    "mostOverdue": 30,
+    "deskOrderOnly": 176,
+    "desk": 228
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 7,
+    "closestFirst": 26,
+    "mostOverdue": 10,
+    "deskOrderOnly": 41,
+    "desk": 239
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 24,
+    "closestFirst": 66,
+    "mostOverdue": 18,
+    "deskOrderOnly": 93,
+    "desk": 245
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.4,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 46,
+    "closestFirst": 140,
+    "mostOverdue": 31,
+    "deskOrderOnly": 190,
+    "desk": 252
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 9,
+    "closestFirst": 50,
+    "mostOverdue": 18,
+    "deskOrderOnly": 70,
+    "desk": 329
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 36,
+    "closestFirst": 107,
+    "mostOverdue": 34,
+    "deskOrderOnly": 147,
+    "desk": 340
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 62,
+    "closestFirst": 180,
+    "mostOverdue": 49,
+    "deskOrderOnly": 251,
+    "desk": 351
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 9,
+    "closestFirst": 50,
+    "mostOverdue": 18,
+    "deskOrderOnly": 70,
+    "desk": 359
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 38,
+    "closestFirst": 115,
+    "mostOverdue": 38,
+    "deskOrderOnly": 158,
+    "desk": 369
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 65,
+    "closestFirst": 200,
+    "mostOverdue": 53,
+    "deskOrderOnly": 272,
+    "desk": 380
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 9,
+    "closestFirst": 50,
+    "mostOverdue": 18,
+    "deskOrderOnly": 70,
+    "desk": 390
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 41,
+    "closestFirst": 121,
+    "mostOverdue": 38,
+    "deskOrderOnly": 167,
+    "desk": 398
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.6,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 71,
+    "closestFirst": 215,
+    "mostOverdue": 54,
+    "deskOrderOnly": 292,
+    "desk": 410
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 11,
+    "closestFirst": 67,
+    "mostOverdue": 28,
+    "deskOrderOnly": 107,
+    "desk": 432
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 40,
+    "closestFirst": 139,
+    "mostOverdue": 47,
+    "deskOrderOnly": 202,
+    "desk": 443
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.3,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 74,
+    "closestFirst": 232,
+    "mostOverdue": 64,
+    "deskOrderOnly": 329,
+    "desk": 455
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 11,
+    "closestFirst": 67,
+    "mostOverdue": 28,
+    "deskOrderOnly": 107,
+    "desk": 468
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 44,
+    "closestFirst": 150,
+    "mostOverdue": 51,
+    "deskOrderOnly": 217,
+    "desk": 478
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.55,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 78,
+    "closestFirst": 257,
+    "mostOverdue": 68,
+    "deskOrderOnly": 357,
+    "desk": 490
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 11,
+    "closestFirst": 67,
+    "mostOverdue": 28,
+    "deskOrderOnly": 107,
+    "desk": 507
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.35
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 47,
+    "closestFirst": 158,
+    "mostOverdue": 53,
+    "deskOrderOnly": 228,
+    "desk": 515
+   }
+  },
+  {
+   "truth": {
+    "reach": 0.8,
+    "pFix": 0.8,
+    "pGeneric": 0.25,
+    "pDiscover": 0.7
+   },
+   "gained": {
+    "none": 0,
+    "lowestFirst": 87,
+    "closestFirst": 275,
+    "mostOverdue": 72,
+    "deskOrderOnly": 383,
+    "desk": 528
+   }
+  }
+ ],
+ "ranAt": "2026-11-23T02:51:16.524Z"
+}

@@ -16,9 +16,12 @@ The members and claims are a synthetic plan of 6,000 members. No real member or 
 - **Call list.** For each member it shows days covered so far, how many more days they can miss and still reach 80%, the last day to refill, a likely barrier read from the claims and the fix to offer (a 90-day supply with auto-refill, one pharmacy with synced dates, a lower-cost option and an Extra Help check, or a clinical call about side effects). One call covers every adherence drug the member takes. It picks members a call can still help, then orders them by who has the least time to spare.
 - **Judgment lanes.** Members who cannot reach 80% this year, new starts with one fill (a second fill adds them to the measure, so clinical need decides), and members whose claims show a therapy change (ask the prescriber, do not push a refill).
 - **Safety faxes.** Statin use in diabetes, opioids with benzodiazepines and two anticholinergics, grouped into one fax per prescriber with a specific ask and references.
+- **Pharmacy.** How a pharmacy would sell gap closure to any plan. It picks the store that fills for the most members with an open gap, then shows who that store can reach (a refill due there in the next 30 days brings them to the counter, an overdue or 90-day member gets a call from the store, everyone else fills elsewhere), the next 7 days of pickups with the counter action for each gap, and what the plan pays for: closures its own claims confirm by the CMS rules, not calls or attempts.
 - **January changes.** Members hit by the plan's 2027 formulary changes, who has no room for a gap, a pharmacist switch note for the prescriber and a member letter held to a sixth grade reading level.
 
 ![Call list with one member's coverage, days to spare, barrier and fix](docs/img/call-list.png)
+
+![Pharmacy: who one store can reach at the counter, and the next 7 days of pickups](docs/img/pharmacy.png)
 
 ## What's checked
 

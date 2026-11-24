@@ -4,6 +4,7 @@ import SaveList from './ui/SaveList.jsx';
 import Safety from './ui/Safety.jsx';
 import Formulary from './ui/Formulary.jsx';
 import Pilot from './ui/Pilot.jsx';
+import Pharmacy from './ui/Pharmacy.jsx';
 import { dayLabel } from './ui/format.js';
 
 const TABS = [
@@ -11,6 +12,7 @@ const TABS = [
   { key: 'list', label: 'Call list', short: 'Calls' },
   { key: 'safety', label: 'Safety faxes', short: 'Faxes' },
   { key: 'formulary', label: 'January changes', short: 'January' },
+  { key: 'pharmacy', label: 'Pharmacy', short: 'Store' },
 ];
 
 function readHash() {
@@ -57,6 +59,7 @@ export default function App() {
         {tab === 'list' && <SaveList data={data} params={params} go={go} />}
         {tab === 'safety' && <Safety data={data} params={params} />}
         {tab === 'formulary' && <Formulary data={data} params={params} />}
+        {tab === 'pharmacy' && <Pharmacy data={data} />}
         {(tab === 'pilot' || tab === 'proof') && <Pilot data={data} />}
       </main>
       <footer className="foot">

@@ -7,6 +7,7 @@ import { safetyBoard } from '../src/engine/safety.js';
 import { formularyImpact, memberNotice, fleschKincaid, TIMELINE_2027 } from '../src/engine/formulary.js';
 import { targetFills } from '../src/engine/pdc.js';
 import { measureSummary, oneAwaySummary, starCheck } from '../src/engine/market.js';
+import { storeView } from '../src/engine/pharmacy.js';
 
 const SEED = 201; // a plan the rules were never tuned on
 const AS_OF = 273; // October 1, 2026
@@ -149,7 +150,23 @@ const market = {
 };
 if (check.unexplained.length) throw new Error(`star logic disagrees with CMS on ${check.unexplained.length} scores`);
 
+// One store's view of the same gaps (Pharmacy tab).
+const safetyByMember = new Map();
+for (const items of Object.values(board.byPrescriber)) for (const it of items) {
+  if (!safetyByMember.has(it.member)) safetyByMember.set(it.member, []);
+  safetyByMember.get(it.member).push(it);
+}
+const pharmacy = storeView({ members, analyses: byId, safetyByMember, asOf: AS_OF });
+// Keep the next 7 days for the app: up to 6 members a day, plus each day's count.
+pharmacy.week = [];
+for (let d = AS_OF; d < AS_OF + 7; d++) {
+  const rows = pharmacy.counter.filter((r) => r.next === d);
+  if (rows.length) pharmacy.week.push({ day: d, count: rows.length, rows: rows.slice(0, 6) });
+}
+delete pharmacy.counter;
+
 const out = {
+  pharmacy,
   market,
   plan: { name: 'Harbor Senior Rx', synthetic: true, asOf: AS_OF, year: 2026, members: members.length, k: K, yearDays: YEAR_DAYS },
   measures, safetyMeasures, laneCounts, laneMembers, members: memberViews, faxes, changes, timeline: TIMELINE_2027,
@@ -160,4 +177,5 @@ console.log('wrote public/data/desk.json', (JSON.stringify(out).length / 1024).t
 console.log(measures.map((m) => `${m.id} ${m.rate.toFixed(1)} ${m.star}* toNext ${m.toNext} open ${m.open} onList ${m.onList}`).join('\n'));
 console.log(safetyMeasures.map((m) => `${m.id} ${m.num}/${m.den} ${m.rate.toFixed(1)} ${m.star}* toNext ${m.toNext} heading ${m.heading}`).join('\n'));
 console.log('market', `${market.oneAway} of ${market.plans} MA-PD plans one point from the next star`, 'check', market.check);
+console.log('pharmacy', pharmacy.store, pharmacy.planMembersWithGaps, pharmacy.reach, JSON.stringify(pharmacy.byGap));
 console.log('lanes', laneCounts, 'faxes', faxes.length, 'changes', changes.map((c) => `${c.drug} ${c.count}/${c.high} grade ${c.grade}`).join(', '));

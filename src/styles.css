@@ -316,3 +316,69 @@ aside.today { background: var(--surface); border: 1px solid var(--line); border-
   .pcards { grid-template-columns: 1fr; }
   .checked ul { grid-template-columns: 1fr; }
 }
+
+/* pharmacy */
+.funnel { list-style: none; padding: 0; margin: 16px 0; display: flex; flex-direction: column; gap: 12px; }
+.funnel li { display: grid; grid-template-columns: 1fr 64px; grid-template-areas: 'bar n' 'txt txt'; gap: 4px 12px; align-items: center; font-size: 14px; }
+.funnel .fbar { grid-area: bar; height: 12px; background: #eef0f1; border-radius: 6px; overflow: hidden; }
+.funnel .fbar i { display: block; height: 100%; border-radius: 6px; background: #b9c0c8; }
+.funnel .fbar i.mid { background: var(--slate); }
+.funnel .fbar i.gold { background: var(--gold); }
+.funnel .mono { grid-area: n; text-align: right; font-size: 18px; }
+.funnel li > span:last-child { grid-area: txt; color: var(--muted); }
+.funnel li.hot > span:last-child { color: var(--ink); font-weight: 500; }
+.reach { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px; }
+.reach th, .reach td { text-align: left; padding: 12px 12px 12px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.reach thead th { font-size: 13px; color: var(--muted); font-weight: 500; border-top: 0; }
+.reach .num { text-align: right; width: 112px; }
+.reach .muted { color: var(--muted); }
+.reach tbody th { font-weight: 500; width: 240px; }
+.rbar { display: block; height: 6px; margin-top: 8px; background: #eef0f1; border-radius: 3px; overflow: hidden; }
+.rbar i { display: block; height: 100%; background: var(--gold); }
+.weekview { margin: 40px 0 32px; }
+.days { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+.dayc header { justify-content: space-between; }
+.dayc li { gap: 2px; }
+.cact { font-size: 14px; color: var(--teal); }
+.cact b { color: var(--ink); font-weight: 500; }
+.pharmacy .pcards.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 860px) {
+  .tabs { grid-template-columns: repeat(5, 1fr); }
+  .pharmacy .pcards.three { grid-template-columns: 1fr; }
+  .reach thead { display: none; }
+  .reach tr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 8px; border-top: 1px solid var(--line); padding: 12px 0; }
+  .reach th, .reach td { border: 0; padding: 0; }
+  .reach tbody th { grid-column: 1 / -1; width: auto; }
+  .reach td:last-child { grid-column: 1 / -1; color: var(--muted); }
+  .reach .num { text-align: left; width: auto; }
+  .reach td.num::before { display: block; font: 12px 'IBM Plex Sans', sans-serif; color: var(--muted); }
+  .reach td.num:nth-of-type(1)::before { content: 'Counter'; }
+  .reach td.num:nth-of-type(2)::before { content: 'Phone'; }
+  .reach td.num:nth-of-type(3)::before { content: 'Elsewhere'; }
+}
+.weekstrip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 16px 0; }
+.wday { display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 8px; min-height: 44px; transition: border-color 160ms ease, box-shadow 160ms ease; }
+.wday:hover { border-color: #b9c0c8; }
+.wday.on { border-color: var(--gold); box-shadow: inset 0 -3px 0 var(--gold); }
+.wbar { display: flex; align-items: flex-end; width: 24px; height: 48px; }
+.wbar i { display: block; width: 100%; border-radius: 4px 4px 2px 2px; background: #c9ced4; transition: height 300ms ease; }
+.wday.on .wbar i { background: var(--gold); }
+.wday .mono { font-size: 18px; }
+.pickups { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); animation: pfade 260ms ease both; }
+.pickups li { display: grid; grid-template-columns: 260px 1fr; gap: 8px 24px; padding: 16px 24px; border-top: 1px solid var(--line); }
+.pickups li:first-child { border-top: 0; }
+.pickups li.more { display: block; }
+.pwho { display: flex; flex-direction: column; }
+.pacts { display: flex; flex-direction: column; gap: 6px; }
+.pact { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 15px; color: var(--teal); }
+.pact b { color: var(--ink); font-weight: 500; min-width: 200px; }
+@keyframes pfade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pickups { animation: none; } .wbar i { transition: none; } }
+@media (max-width: 860px) {
+  .weekstrip { gap: 4px; }
+  .wday { padding: 8px 2px; }
+  .wday .sub { font-size: 11px; }
+  .pickups li { grid-template-columns: 1fr; padding: 16px; }
+  .pact b { min-width: 0; flex-basis: 100%; }
+}
+.lede a { color: var(--ink); }

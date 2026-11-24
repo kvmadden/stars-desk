@@ -382,3 +382,29 @@ aside.today { background: var(--surface); border: 1px solid var(--line); border-
   .pact b { min-width: 0; flex-basis: 100%; }
 }
 .lede a { color: var(--ink); }
+
+/* pharmacy lead */
+.phlead { max-width: 1040px; margin-bottom: 56px; }
+.phlead h1 { font-size: 46px; margin-bottom: 40px; }
+.walkin { margin: 0 0 32px; }
+.wstack { display: flex; gap: 3px; height: 44px; border-radius: 10px; overflow: hidden; }
+.wstack span { display: block; height: 100%; transform-origin: left; animation: wgrow 700ms ease both; }
+.wstack .gold { background: var(--gold); }
+.wstack .slate { background: var(--slate); }
+.wstack .quiet { background: #c9ced4; }
+.wlegend { list-style: none; padding: 0; margin: 16px 0 8px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.wlegend li { display: flex; flex-direction: column; gap: 2px; padding-left: 12px; border-left: 4px solid #c9ced4; font-size: 14px; color: var(--muted); }
+.wlegend li.gold { border-color: var(--gold); color: var(--ink); }
+.wlegend li.slate { border-color: var(--slate); }
+.wlegend .mono { font-size: 24px; color: var(--ink); }
+.bymeasure { margin-top: 32px; }
+.bymeasure summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; list-style: none; }
+.bymeasure summary h2 { margin: 0; }
+.bymeasure summary::after { content: '+'; margin-left: 12px; color: var(--muted); font-size: 20px; }
+.bymeasure[open] summary::after { content: '×'; }
+@keyframes wgrow { from { transform: scaleX(0); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .wstack span { animation: none; } }
+@media (max-width: 860px) { .phlead h1 { font-size: 30px; } .wlegend { grid-template-columns: 1fr 1fr; } }
+.wlegend li { text-align: left; align-items: flex-start; }
+.walkhead { font-size: 22px; margin: -16px 0 20px; color: var(--ink); }
+.walkhead .mono { font-size: 34px; color: #8a6216; margin-right: 8px; }

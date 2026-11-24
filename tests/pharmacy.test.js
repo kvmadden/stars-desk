@@ -35,3 +35,14 @@ describe('store reach', () => {
     expect(counterAction({ measure: 'D09', lane: 'save', fix: 'ninety' })).toMatch(/90 days/);
   });
 });
+
+describe('plan-wide reach', async () => {
+  const { planReach } = await import('../src/engine/pharmacy.js');
+  it('walk-in, store call, mail and none', () => {
+    expect(planReach([f(250, 30, 'Grove Pharmacy')], 273)).toBe('walk-in');
+    expect(planReach([f(200, 30, 'Grove Pharmacy')], 273)).toBe('store-call');
+    expect(planReach([f(250, 90, 'Plan mail service')], 273)).toBe('mail');
+    expect(planReach([f(10, 30, 'Grove Pharmacy')], 273)).toBe('none');
+    expect(planReach([f(250, 30, 'Harbor Pharmacy', 'oxycodone', 'opioid')], 273)).toBe('none');
+  });
+});

@@ -17,66 +17,53 @@ const PAYS = [
   { title: 'The plan pays for', lines: ['Closures its own claims confirm, using the CMS rules', 'Adherence: the member ends the year at 80% or higher', 'Statin in diabetes: a statin fill in the measurement year', 'Not for calls, attempts or flags on their own'] },
 ];
 
-function Funnel({ total, here, counter, store }) {
-  const w = (n) => `${Math.max(1.5, (100 * n) / total)}%`;
+const SEGS = [
+  { key: 'walk-in', label: 'Refill due at a pharmacy counter in the next 30 days', tone: 'gold' },
+  { key: 'store-call', label: 'Use a pharmacy, but overdue or on 90 days', tone: 'slate' },
+  { key: 'mail', label: 'Mail order only', tone: 'quiet' },
+  { key: 'none', label: 'No recent fill', tone: 'quiet' },
+];
+
+function WalkIn({ plan, total }) {
   return (
-    <ol className="funnel" aria-label="Who the store can reach">
-      <li><span className="fbar"><i style={{ width: '100%' }} /></span><span className="mono">{total.toLocaleString()}</span><span>plan members with an open gap</span></li>
-      <li><span className="fbar"><i className="mid" style={{ width: w(here) }} /></span><span className="mono">{here.toLocaleString()}</span><span>filled something at {store} in the last 120 days</span></li>
-      <li className="hot"><span className="fbar"><i className="gold" style={{ width: w(counter) }} /></span><span className="mono">{counter.toLocaleString()}</span><span>have a refill due here in the next 30 days</span></li>
-    </ol>
+    <figure className="walkin">
+      <div className="wstack" aria-hidden="true">
+        {SEGS.map((s, i) => <span key={s.key} className={s.tone} style={{ flexGrow: plan[s.key], animationDelay: `${150 + i * 120}ms` }} />)}
+      </div>
+      <ul className="wlegend">
+        {SEGS.map((s) => (
+          <li key={s.key} className={s.tone}>
+            <span className="mono">{plan[s.key].toLocaleString()}</span>
+            <span>{s.label}</span>
+          </li>
+        ))}
+      </ul>
+      <figcaption className="sub">All {total.toLocaleString()} members of the synthetic plan with an open adherence or safety gap on October 1. A real plan can count this from its own claims in an afternoon.</figcaption>
+    </figure>
   );
 }
 
 export default function Pharmacy({ data }) {
   const ph = data.pharmacy;
   const asOf = data.plan.asOf;
-  const here = ph.reach.counter + ph.reach.phone;
   const week = ph.week;
   const [day, setDay] = useState(week[0]?.day);
   const most = Math.max(1, ...week.map((w) => w.count));
   const picked = week.find((w) => w.day === day);
+  const pct = Math.round((100 * ph.plan['walk-in']) / ph.planMembersWithGaps);
   return (
     <div className="page pharmacy">
-      <section className="herogrid">
-        <div className="hero">
-          <p className="eyebrow">For a pharmacy selling to any plan</p>
-          <h1>One store has <span className="hl">{ph.reach.counter} of the plan's {ph.planMembersWithGaps.toLocaleString()} gap members</span> due at its counter in the next 30 days.</h1>
-          <p className="lede">CVS Health plans to split its stores into a standalone company (<a href="https://www.pharmacytimes.com/view/cvs-health-to-split-into-2-public-companies-separating-retail-and-specialty-pharmacy" target="_blank" rel="noreferrer">Pharmacy Times, Nov 4, 2026</a>), so those stores would sell to every plan, not one parent. A store's edge over a call center is that the member walks in. The plan pays only for gaps its own claims show closed.</p>
-        </div>
-        <aside className="today">
-          <h2>{ph.store} (synthetic)</h2>
-          <Funnel total={ph.planMembersWithGaps} here={here} counter={ph.reach.counter} store={ph.store} />
-          <p className="sub">The other {ph.reach.elsewhere.toLocaleString()} fill at other pharmacies or by mail. Their own pharmacy or the plan's outreach reaches them.</p>
-        </aside>
-      </section>
-
-      <section className="board">
-        <h2>Who the store can reach, by measure</h2>
-        <p className="boardsub">Counter means a refill here falls due in the next 30 days. Phone means they fill here but their refill is already overdue or not due for a month, so the store calls.</p>
-        <table className="reach">
-          <thead><tr><th>Gap</th><th className="num">At the counter</th><th className="num">By phone</th><th className="num">Elsewhere</th><th>What the store does</th></tr></thead>
-          <tbody>
-            {ORDER.filter((m) => ph.byGap[m]).map((m) => {
-              const g = ph.byGap[m];
-              const tot = g.counter + g.phone + g.elsewhere;
-              return (
-                <tr key={m}>
-                  <th scope="row">{LABEL[m]}<span className="rbar"><i style={{ width: `${(100 * g.counter) / tot}%` }} /></span></th>
-                  <td className="num mono">{g.counter}</td>
-                  <td className="num mono">{g.phone}</td>
-                  <td className="num mono muted">{g.elsewhere}</td>
-                  <td>{AT_COUNTER[m]}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+      <section className="phlead">
+        <p className="eyebrow">For a pharmacy selling to any plan</p>
+        <h1>Before a plan pays to phone its gap list, it should count who is <span className="hl">about to walk into a pharmacy</span> anyway.</h1>
+        <p className="walkhead"><span className="mono">{pct}%</span> in this synthetic plan. The pickup is the outreach.</p>
+        <WalkIn plan={ph.plan} total={ph.planMembersWithGaps} />
+        <p className="lede">CVS Health plans to split off its stores (<a href="https://www.pharmacytimes.com/view/cvs-health-to-split-into-2-public-companies-separating-retail-and-specialty-pharmacy" target="_blank" rel="noreferrer">Pharmacy Times, Nov 4, 2026</a>), so they would sell to every plan, not one parent. What a store sells: flag the member before they arrive, close the gap in the pickup conversation, and get paid only for gaps the plan's own claims show closed.</p>
       </section>
 
       <section className="weekview">
-        <h2>At the counter in the next 7 days</h2>
-        <p className="sub">Each member is flagged before they arrive, so the conversation happens at pickup with no call.</p>
+        <h2>What that looks like at one store: {ph.store}, the next 7 days</h2>
+        <p className="sub">{ph.reach.counter} of the plan's gap members have a refill due here in the next 30 days. Each is flagged before they arrive.</p>
         <div className="weekstrip" role="tablist" aria-label="Pickups by day">
           {week.map((w) => (
             <button key={w.day} role="tab" aria-selected={w.day === day} className={w.day === day ? 'wday on' : 'wday'} onClick={() => setDay(w.day)}>
@@ -107,7 +94,30 @@ export default function Pharmacy({ data }) {
           </article>
         ))}
       </section>
-      <p className="note">Prove it the same way as the call list: randomize a store's gap members into the counter flag or the plan's usual outreach, and compare closures on the plan's claims at year end. No outcome claim before that.</p>
+
+      <details className="board bymeasure">
+        <summary><h2>By measure: who one store can reach</h2></summary>
+        <p className="boardsub">Counter means a refill at {ph.store} falls due in the next 30 days. Phone means they fill there but are overdue or not due this month.</p>
+        <table className="reach">
+          <thead><tr><th>Gap</th><th className="num">At the counter</th><th className="num">By phone</th><th className="num">Elsewhere</th><th>What the store does</th></tr></thead>
+          <tbody>
+            {ORDER.filter((m) => ph.byGap[m]).map((m) => {
+              const g = ph.byGap[m];
+              const tot = g.counter + g.phone + g.elsewhere;
+              return (
+                <tr key={m}>
+                  <th scope="row">{LABEL[m]}<span className="rbar"><i style={{ width: `${(100 * g.counter) / tot}%` }} /></span></th>
+                  <td className="num mono">{g.counter}</td>
+                  <td className="num mono">{g.phone}</td>
+                  <td className="num mono muted">{g.elsewhere}</td>
+                  <td>{AT_COUNTER[m]}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </details>
+      <p className="note">Prove it the same way as the call list: randomize gap members into the counter flag or the plan's usual outreach, and compare closures on the plan's claims at year end. No outcome claim before that.</p>
     </div>
   );
 }

@@ -49,6 +49,20 @@ export function reachAt(store, fills, asOf) {
   return { reach: 'phone', next: due[0].day, drug: due[0].drug, overdue: due[0].day < asOf };
 }
 
+// Plan-wide: how each gap member will next meet the pharmacy system. Walk-in means a refill at
+// some retail pharmacy falls due in the next 30 days. Store call means they use a retail pharmacy
+// but are overdue or not due this month. Mail and no recent fill are out of a store's reach.
+export function planReach(fills, asOf) {
+  const recent = fills.filter((f) => counts(f) && f.day < asOf && asOf - f.day <= RECENT_DAYS);
+  const retail = recent.filter((f) => f.pharmacy !== MAIL);
+  if (retail.length) {
+    const stores = [...new Set(retail.map((f) => f.pharmacy))];
+    if (stores.some((s) => reachAt(s, fills, asOf).reach === 'counter')) return 'walk-in';
+    return 'store-call';
+  }
+  return recent.length ? 'mail' : 'none';
+}
+
 export function storeView({ members, analyses, safetyByMember, asOf }) {
   const withGaps = [];
   for (const m of members) {
@@ -72,8 +86,11 @@ export function storeView({ members, analyses, safetyByMember, asOf }) {
     byGap[g.measure][r.reach]++;
   }
   const counter = rows.filter((r) => r.reach === 'counter').sort((a, b) => a.next - b.next || b.gaps.length - a.gaps.length);
+  const plan = { 'walk-in': 0, 'store-call': 0, mail: 0, none: 0 };
+  for (const { m } of withGaps) plan[planReach(m.fills, asOf)]++;
   return {
     store,
+    plan,
     planMembersWithGaps: rows.length,
     reach: { counter: count('counter'), phone: count('phone'), elsewhere: count('elsewhere') },
     byGap,

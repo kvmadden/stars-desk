@@ -1,5 +1,7 @@
 # Stars Desk
 
+Live: [stars.kvmadden.com](https://stars.kvmadden.com). The pharmacy view is at [stars.kvmadden.com/#/pharmacy](https://stars.kvmadden.com/#/pharmacy).
+
 A Part D Stars pharmacist's desk. It answers one question for a Medicare Advantage clinical pharmacy team on October 1: which members move the plan's star ratings, and what should we do about each one?
 
 The margin is thin. In CMS's 2027 ratings, 385 of 567 Medicare Advantage drug plans sat one point short of the next star on at least one adherence measure, and those three measures count triple ([CMS data tables](https://www.cms.gov/medicare/health-drug-plans/part-c-d-performance-data)).

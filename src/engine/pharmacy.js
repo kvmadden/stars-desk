@@ -12,7 +12,7 @@ export const GAP_LABEL = { ...ADH, D11: 'Statin use in diabetes', D12: 'Opioid w
 // What the store does about each gap at the counter.
 export function counterAction(gap) {
   if (gap.measure in ADH) {
-    if (gap.lane === 'new-start') return 'Ask how the first fill went.';
+    if (gap.lane === 'new-start') return 'Ask how the first fill went';
     return FIX_TEXT[gap.fix]?.label || 'Ask what makes refills hard';
   }
   if (gap.measure === 'D11') return 'Ask about a statin, then request one from the prescriber';

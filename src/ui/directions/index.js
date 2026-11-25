@@ -6,6 +6,7 @@ import StoreB from './StoreB.jsx';
 import PlanB from './PlanB.jsx';
 import StoreC from './StoreC.jsx';
 import PlanC from './PlanC.jsx';
+import StoreFinal from './StoreFinal.jsx';
 import '../../directions.css';
 
 const FONTS = {
@@ -13,6 +14,8 @@ const FONTS = {
   b: 'family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600',
   c: 'family=Libre+Franklin:wght@400;500;600;700',
 };
+// Final: Kevin's pick (Nov 25). A's style on every view, B's store headline, C's refill calendar redrawn in A's style.
+FONTS.final = FONTS.a;
 
 function read() {
   if (typeof window === 'undefined') return null;
@@ -23,14 +26,16 @@ function read() {
 export const DIRECTION = read();
 
 if (DIRECTION) {
-  document.documentElement.dataset.direction = DIRECTION;
+  // Final wears A's styles everywhere, so it sets the A theme and marks itself for the few final-only rules.
+  document.documentElement.dataset.direction = DIRECTION === 'final' ? 'a' : DIRECTION;
+  if (DIRECTION === 'final') document.documentElement.dataset.final = '';
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = `https://fonts.googleapis.com/css2?${FONTS[DIRECTION]}&display=swap`;
   document.head.appendChild(link);
 }
 
-const STORE = { a: StoreA, b: StoreB, c: StoreC };
-const PLAN = { a: PlanA, b: PlanB, c: PlanC };
+const STORE = { a: StoreA, b: StoreB, c: StoreC, final: StoreFinal };
+const PLAN = { a: PlanA, b: PlanB, c: PlanC, final: PlanA };
 export const StoreFor = (d) => (d ? STORE[d] : null);
 export const PlanFor = (d) => (d ? PLAN[d] : null);

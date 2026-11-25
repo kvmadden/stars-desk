@@ -76,6 +76,7 @@ html[data-direction='a'] .dot { background: var(--ink); box-shadow: 0 0 0 1px va
 .a-cut .cutline line { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 3; }
 .a-cut .cutline text { font: 600 13px 'IBM Plex Sans', sans-serif; fill: var(--ink); }
 .a-cut .cutline text.q { font: 400 12px 'IBM Plex Mono', monospace; fill: var(--muted); }
+.a-cut .labshort { display: none; }
 .a-cut .tickl { font: 12px 'IBM Plex Mono', monospace; fill: var(--muted); text-anchor: middle; }
 .a-cut .me line { stroke: var(--ink); stroke-width: 1.5; }
 .a-cut .me circle { fill: var(--ink); stroke: #fff; stroke-width: 2; }
@@ -143,6 +144,11 @@ html[data-direction='a'] .dot { background: var(--ink); box-shadow: 0 0 0 1px va
   .a-copy h1 { font-size: 34px; }
   .a-stand { font-size: 18px; }
   .a-units.wide { display: none; }
+  .a-cut .cutline text { font-size: 20px; }
+  .a-cut .tickl { font-size: 18px; }
+  .a-cut .me text { font-size: 22px; }
+  .a-cut .labshort { display: inline; }
+  .a-cut .lablong { display: none; }
   .a-units.narrow { display: block; }
   .a-narrowkey { display: flex; flex-direction: column; gap: 6px; list-style: none; padding: 0; margin: 16px 0 0; font-size: 14px; }
   .a-narrowkey li { display: flex; gap: 8px; align-items: baseline; }
@@ -516,4 +522,25 @@ html[data-direction='c'] .hbar.near { background: var(--blue); }
   .c-reach th, .c-reach td { border: 0; padding: 2px 0; text-align: left !important; }
   .c-reach th[scope], .c-reach td:last-child { grid-column: 1 / -1; }
   .c-reach td.num::after { content: ' ' attr(data-k); color: var(--muted); }
+}
+
+/* ───────────────────────── Final · A's style, C's refill calendar ───────────────────────── */
+.f-open { align-items: center; }
+.f-cal .c-calhead span { font: 600 12px 'IBM Plex Sans', sans-serif; color: var(--muted); padding: 0 8px; }
+.f-cal .c-calgrid, .f-cal .c-calhead { gap: 0; }
+.f-cal .c-calgrid { border-top: 1px solid var(--ink); }
+.f-cal .c-cell { min-height: 64px; background: rgba(15, 107, 99, calc(var(--shade, 0) * 0.92)); outline: 0; border-right: 1px solid #fff; border-bottom: 1px solid #fff; padding: 6px 8px; font-family: 'IBM Plex Sans', sans-serif; color: var(--ink); }
+.f-cal .c-cell.empty { background: none; border-bottom: 1px solid var(--line); }
+.f-cal .c-cell.dark { color: #fff; }
+.f-cal .c-cell.pick { outline: 0; box-shadow: inset 0 -3px 0 var(--ink); }
+.f-cal .c-cell.pick:hover { outline: 0; box-shadow: inset 0 0 0 2px var(--ink); }
+.f-cal .c-cell.on { outline: 0; box-shadow: inset 0 0 0 3px var(--ink); }
+.f-cal .c-date { font: 500 11px 'IBM Plex Mono', monospace; opacity: 0.85; }
+.f-cal .c-n { font: 600 22px var(--serif); line-height: 1; }
+.f-day { padding-top: 32px; }
+@media (max-width: 860px) {
+  .f-cal .c-cell { min-height: 50px; padding: 4px 4px; }
+  .f-cal .c-date { font-size: 9px; }
+  .f-cal .c-n { font-size: 17px; }
+  .f-cal .c-calhead span { padding: 0 2px; font-size: 11px; }
 }

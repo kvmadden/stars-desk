@@ -7,7 +7,7 @@ import { REACH, n, weekday, dayFull } from './shared.js';
 const STEPS = ['The plan sends its gap file', 'The store closes gaps at pickup', 'The plan pays on its own claims'];
 const COLS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-function Calendar({ month, week, day, setDay, asOf }) {
+export function Calendar({ month, week, day, setDay, asOf }) {
   const most = Math.max(1, ...month.map((d) => d.count));
   const lead = (weekday(month[0].day) + 6) % 7; // Monday first
   const cells = [...Array(lead).fill(null), ...month];

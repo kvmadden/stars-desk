@@ -5,7 +5,7 @@ import { ORDER, LABEL, AT_COUNTER, PAYS } from '../Pharmacy.jsx';
 import { REACH, n, dayFull, dayName } from './shared.js';
 
 // One square per member, filled row by row in reach order.
-function Units({ plan, cols, cell = 9, gap = 2, labels }) {
+export function Units({ plan, cols, cell = 9, gap = 2, labels }) {
   const order = REACH.flatMap((s) => Array(plan[s.key]).fill(s.tone));
   const rows = Math.ceil(order.length / cols);
   const step = cell + gap;

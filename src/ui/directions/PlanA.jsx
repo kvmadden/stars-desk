@@ -22,7 +22,8 @@ function CutChart({ m, hist }) {
       {m.cut.map((c, i) => (
         <g key={c} className="cutline">
           <line x1={x(c - 0.5)} x2={x(c - 0.5)} y1={top - 8} y2={base} />
-          <text x={x(c - 0.5) + 5} y={top - 12}>{i + 2} stars</text>
+          <text x={x(c - 0.5) + 5} y={top - 12} className="lablong">{i + 2} stars</text>
+          <text x={x(c - 0.5) + 5} y={top - 12} className="labshort">{i + 2}★</text>
         </g>
       ))}
       {bars.map(([s, c]) => (
@@ -31,7 +32,7 @@ function CutChart({ m, hist }) {
       <line x1="0" x2={W} y1={base} y2={base} className="axis" />
       {[78, ...m.cut, 98].map((t, i) => <text key={t} x={i === 0 || i === m.cut.length + 1 ? x(t) : x(t - 0.5)} y={base + 18} className="tickl">{t}%</text>)}
       <g className="me">
-        <line x1={px} x2={px} y1={base + 26} y2={top + 20} />
+        <line x1={px} x2={px} y1={base} y2={top + 20} />
         <circle cx={px} cy={base} r="6" />
         <text x={px - 10} y={base + 44} textAnchor="end">This plan, projected <tspan className="num">{m.rate.toFixed(1)}%</tspan></text>
       </g>

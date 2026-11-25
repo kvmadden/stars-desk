@@ -7,7 +7,7 @@ import { safetyBoard } from '../src/engine/safety.js';
 import { formularyImpact, memberNotice, fleschKincaid, TIMELINE_2027 } from '../src/engine/formulary.js';
 import { targetFills } from '../src/engine/pdc.js';
 import { measureSummary, oneAwaySummary, starCheck } from '../src/engine/market.js';
-import { storeView } from '../src/engine/pharmacy.js';
+import { storeView, COUNTER_DAYS } from '../src/engine/pharmacy.js';
 
 const SEED = 201; // a plan the rules were never tuned on
 const AS_OF = 273; // October 1, 2026
@@ -163,6 +163,9 @@ for (let d = AS_OF; d < AS_OF + 7; d++) {
   const rows = pharmacy.counter.filter((r) => r.next === d);
   if (rows.length) pharmacy.week.push({ day: d, count: rows.length, rows: rows.slice(0, 6) });
 }
+// The whole counter window, one count per day, for the refill calendar.
+pharmacy.month = [];
+for (let d = AS_OF; d < AS_OF + COUNTER_DAYS; d++) pharmacy.month.push({ day: d, count: pharmacy.counter.filter((r) => r.next === d).length });
 delete pharmacy.counter;
 
 const out = {

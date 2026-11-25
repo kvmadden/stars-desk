@@ -63,7 +63,10 @@ export default function App() {
         {(tab === 'pilot' || tab === 'proof') && <Pilot data={data} />}
       </main>
       <footer className="foot">
-        <span>Synthetic plan and members. Measure rules, cut points and real plan scores from CMS's 2027 Star Ratings.</span>
+        <div className="foot-text">
+          <p>Independent portfolio work by Kevin Madden. Not affiliated with or sponsored by any employer. Built on personal time and equipment, using only public or synthetic data.</p>
+          <p>Measure rules, cut points and real plan scores from CMS's 2027 Star Ratings.</p>
+        </div>
         <a href="#/pilot">How a pilot would prove it</a>
       </footer>
     </div>

@@ -105,7 +105,7 @@ export default function Pharmacy({ data }) {
           <p className="a-kicker">{ph.store} <span>·</span> synthetic plan, October 1</p>
           <h1>{ph.reach.counter} gap members have a refill due at this store in the next 30 days</h1>
           <p className="a-stand">Each one can be flagged before they arrive, so the gap gets raised at pickup.</p>
-          <p className="a-why">The store sees the member at pickup whatever plan they are in, and gets paid only for closures the plan's own claims confirm.</p>
+          <p className="a-why">Members come to the pharmacy on their own, at pickup, the drive-thru, a delivery, a call or the app, whatever plan they are in. The store gets paid only for closures the plan's own claims confirm.</p>
         </div>
         <figure className="a-fig f-cal">
           <figcaption>

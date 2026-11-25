@@ -45,7 +45,11 @@ function CutChart({ m, hist }) {
         <rect key={s} x={x(s - 0.5) + 1.5} width={bw - 3} y={base - ((base - top - 24) * c) / most} height={((base - top - 24) * c) / most} className={pointsToNextStar(m, s) === 1 ? 'b near' : 'b'} />
       ))}
       <line x1="0" x2={W} y1={base} y2={base} className="axis" />
-      {[78, ...m.cut, 98].map((t, i) => <text key={t} x={i === 0 || i === m.cut.length + 1 ? x(t) : x(t - 0.5)} y={base + 18} className="tickl">{t}%</text>)}
+      {[78, ...m.cut, 98].map((t, i) => {
+        const at = i === 0 || i === m.cut.length + 1 ? t : t - 0.5;
+        // Labels within a point and a half of this plan's dot step aside on narrow screens.
+        return <text key={t} x={x(at)} y={base + 18} className={Math.abs(at - m.rate) < 1.5 ? 'tickl neardot' : 'tickl'}>{t}%</text>;
+      })}
       <g className="me">
         <line x1={px} x2={px} y1={base} y2={top + 20} />
         <circle cx={px} cy={base} r="6" />
@@ -59,7 +63,8 @@ export default function Plan({ data, go }) {
   const h = headline(data.measures);
   const mk = data.market;
   const hm = h && mk?.measures[h.id];
-  const max = Math.max(...LANE_ROWS.filter((l) => !l.noLink).map((l) => data.laneCounts[l.key] || 0));
+  // Every bar is a share of all members, so lengths compare honestly.
+  const max = data.plan.members;
   return (
     <div className="page a-page">
       <section className="a-open plan">
@@ -75,7 +80,7 @@ export default function Plan({ data, go }) {
         {h && hm && (
           <figure className="a-fig">
             <figcaption>
-              <strong>{h.label}: where {n(hm.plans)} real drug plans scored</strong>
+              <strong>{h.label}: {n(hm.plans)} plans with a {h.short.toLowerCase()} score</strong>
               <span>Gold bars sat one point short of the next star</span>
             </figcaption>
             <CutChart m={h} hist={hm.hist} />

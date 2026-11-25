@@ -53,7 +53,7 @@ export function Units({ plan, cols, cell = 9, gap = 2, labels }) {
           <line x1={W + 8} x2={W + 24} y1={((call.rowFrom + call.rowTo) / 2) * step + 4} y2={((call.rowFrom + call.rowTo) / 2) * step + 4} />
           <text x={W + 32} y={((call.rowFrom + call.rowTo) / 2) * step + 9}><tspan className="num call">{n(plan['store-call'])}</tspan> use a pharmacy but are</text>
           <text x={W + 32} y={((call.rowFrom + call.rowTo) / 2) * step + 29}>overdue or on 90-day fills</text>
-          <text x={W + 32} y={H + 30}><tspan className="num">{n(plan.mail + plan.none)}</tspan> mail order only or no recent fill</text>
+          <text x={W + 32} y={H + 30}><tspan className="num">{n(plan.mail)}</tspan> mail order only, <tspan className="num">{n(plan.none)}</tspan> no recent fill</text>
         </g>
       )}
     </svg>
@@ -104,7 +104,7 @@ export default function Pharmacy({ data }) {
         <div className="a-copy">
           <p className="a-kicker">{ph.store} <span>·</span> synthetic plan, October 1</p>
           <h1>{ph.reach.counter} members with an open gap will walk into this store in the next 30 days</h1>
-          <p className="a-stand">Each one is flagged before they arrive, and the gap is closed in the pickup conversation rather than on a phone list.</p>
+          <p className="a-stand">Each one can be flagged before they arrive, so the gap gets raised at pickup.</p>
           <p className="a-why">The store sees the member at pickup whatever plan they are in, and gets paid only for closures the plan's own claims confirm.</p>
         </div>
         <figure className="a-fig f-cal">
@@ -162,7 +162,7 @@ export default function Pharmacy({ data }) {
       </section>
 
       <details className="a-more">
-        <summary>By measure: who one store can reach</summary>
+        <summary><span className="chev" aria-hidden="true" />By measure: who one store can reach<span className="show">Show</span><span className="hide">Hide</span></summary>
         <table className="a-reach">
           <thead><tr><th>Gap</th><th className="r">Counter</th><th className="r">Phone</th><th className="r">Elsewhere</th><th>What the store does</th></tr></thead>
           <tbody>

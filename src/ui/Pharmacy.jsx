@@ -162,7 +162,7 @@ export default function Pharmacy({ data }) {
       </section>
 
       <details className="a-more">
-        <summary><span className="chev" aria-hidden="true" />By measure: who one store can reach<span className="show">Show</span><span className="hide">Hide</span></summary>
+        <summary><span className="chev" aria-hidden="true" />Who one store can reach, by measure<span className="show">Show</span><span className="hide">Hide</span></summary>
         <table className="a-reach">
           <thead><tr><th>Gap</th><th className="r">Counter</th><th className="r">Phone</th><th className="r">Elsewhere</th><th>What the store does</th></tr></thead>
           <tbody>

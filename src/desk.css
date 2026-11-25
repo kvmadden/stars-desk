@@ -102,8 +102,9 @@ html:root .dot { background: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
 .a-cols li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 15px; }
 .a-deal > h2 { font-family: var(--serif); font-size: 30px; margin: 0 0 24px; }
 .a-more { margin-top: 32px; }
-.a-more summary { font-family: var(--serif); font-size: 20px; font-weight: 600; min-height: 44px; display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; }
+.a-more summary { font-family: var(--serif); font-size: 20px; font-weight: 600; min-height: 44px; text-wrap: balance; display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; }
 .a-more summary::-webkit-details-marker { display: none; }
+@media (max-width: 479px) { .a-more summary { font-size: 17px; } }
 .a-more .chev { width: 10px; height: 10px; border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(-45deg); flex: none; transition: transform 150ms ease; }
 .a-more[open] .chev { transform: rotate(45deg); }
 .a-more .show, .a-more .hide { font: 500 14px 'IBM Plex Sans', sans-serif; color: var(--muted); text-decoration: underline; margin-left: auto; }

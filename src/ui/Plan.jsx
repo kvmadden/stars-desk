@@ -1,14 +1,14 @@
 import React from 'react';
 import { Stars, Track, NATIONAL } from './bits.jsx';
 
-function headline(measures) {
+export function headline(measures) {
   // Lead with the measure closest to its next star.
   const open = measures.filter((m) => m.toNext > 0 && m.star < 5);
   open.sort((a, b) => a.toNext / a.weight - b.toNext / b.weight);
   return open[0];
 }
 
-function MeasureRow({ m, hist, onOpen, safety, linkLabel }) {
+export function MeasureRow({ m, hist, onOpen, safety, linkLabel }) {
   const next = m.star + 1;
   return (
     <li className="mrow">
@@ -41,7 +41,7 @@ function MeasureRow({ m, hist, onOpen, safety, linkLabel }) {
   );
 }
 
-const LANE_ROWS = [
+export const LANE_ROWS = [
   { key: 'save', label: 'Call this month', tone: 'gold' },
   { key: 'prescriber', label: 'Ask the prescriber first', tone: 'slate' },
   { key: 'new-start', label: 'New starts, not counted yet', tone: 'teal' },

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { dayLabel } from './format.js';
 
-const ORDER = ['D08', 'D09', 'D10', 'D11', 'D12', 'D13'];
-const LABEL = { D08: 'Diabetes adherence', D09: 'Blood pressure adherence', D10: 'Statin adherence', D11: 'Statin use in diabetes', D12: 'Opioid with benzodiazepine', D13: 'Two anticholinergics' };
-const AT_COUNTER = {
+export const ORDER = ['D08', 'D09', 'D10', 'D11', 'D12', 'D13'];
+export const LABEL = { D08: 'Diabetes adherence', D09: 'Blood pressure adherence', D10: 'Statin adherence', D11: 'Statin use in diabetes', D12: 'Opioid with benzodiazepine', D13: 'Two anticholinergics' };
+export const AT_COUNTER = {
   D08: 'The call list fix, offered at pickup: 90 days, synced refills or a cost check',
   D09: 'The call list fix, offered at pickup',
   D10: 'The call list fix, offered at pickup',
@@ -11,13 +11,13 @@ const AT_COUNTER = {
   D12: 'Safety fax to the prescriber. Naloxone offer at pickup',
   D13: 'Safety fax to the prescriber with a non-anticholinergic option',
 };
-const PAYS = [
+export const PAYS = [
   { title: 'The plan sends', lines: ['A weekly file of its members with an open gap', 'Measure, days to spare and last fill, by the CMS rules', 'Any member it wants handled by its own team instead'] },
   { title: 'The store does', lines: ['Flags the member in the pickup workflow before they arrive', 'The counter action for each gap, in one conversation', 'Prescriber requests for anything that needs a new prescription', 'Logs what it offered and what the member said'] },
   { title: 'The plan pays for', lines: ['Closures its own claims confirm, using the CMS rules', 'Adherence: the member ends the year at 80% or higher', 'Statin in diabetes: a statin fill in the measurement year', 'Not for calls, attempts or flags on their own'] },
 ];
 
-const SEGS = [
+export const SEGS = [
   { key: 'walk-in', label: 'Refill due at a pharmacy counter in the next 30 days', tone: 'gold' },
   { key: 'store-call', label: 'Use a pharmacy, but overdue or on 90 days', tone: 'slate' },
   { key: 'mail', label: 'Mail order only', tone: 'quiet' },

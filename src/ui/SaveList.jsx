@@ -111,10 +111,13 @@ export default function SaveList({ data, params, go }) {
     if (measure && lane === 'save') list = list.filter((m) => m.measures.some((r) => r.measure === measure && r.lane === 'save'));
     return list;
   }, [ids, measure, lane, data]);
+  // ?member= opens one member straight from another view, like the plan view's first-up queue.
+  const member = params.get('member');
   const [sel, setSel] = useState(null);
-  useEffect(() => setSel(rows[0]?.id || null), [lane, measure]);
+  useEffect(() => setSel(member && data.members[member] ? member : rows[0]?.id || null), [lane, measure, member]);
   const current = sel ? data.members[sel] : null;
-  const [sheet, setSheet] = useState(false);
+  const [sheet, setSheet] = useState(Boolean(member));
+  useEffect(() => { if (member) setSheet(true); }, [member]);
 
   return (
     <div className="page list">

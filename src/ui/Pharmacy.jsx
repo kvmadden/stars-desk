@@ -58,7 +58,7 @@ export default function Pharmacy({ data }) {
         <h1>Before a plan pays to phone its gap list, it should count who is <span className="hl">about to walk into a pharmacy</span> anyway.</h1>
         <p className="walkhead"><span className="mono">{pct}%</span> in this synthetic plan. The pickup is the outreach.</p>
         <WalkIn plan={ph.plan} total={ph.planMembersWithGaps} />
-        <p className="lede">CVS Health plans to split off its stores (<a href="https://www.pharmacytimes.com/view/cvs-health-to-split-into-2-public-companies-separating-retail-and-specialty-pharmacy" target="_blank" rel="noreferrer">Pharmacy Times, Nov 4, 2026</a>), so they would sell to every plan, not one parent. What a store sells: flag the member before they arrive, close the gap in the pickup conversation, and get paid only for gaps the plan's own claims show closed.</p>
+        <p className="lede">One national pharmacy chain plans to split its stores off from its insurer and benefit manager (<a href="https://www.pharmacytimes.com/view/cvs-health-to-split-into-2-public-companies-separating-retail-and-specialty-pharmacy" target="_blank" rel="noreferrer">Pharmacy Times, Nov 4, 2026</a>), so they would sell to every plan, not one parent. What a store sells: flag the member before they arrive, close the gap in the pickup conversation, and get paid only for gaps the plan's own claims show closed.</p>
       </section>
 
       <section className="weekview">

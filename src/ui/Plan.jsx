@@ -119,7 +119,6 @@ export default function Plan({ data, go }) {
       <section className="a-lanes">
         <div className="a-sechead">
           <h2>Where the {n(data.plan.members)} members stand</h2>
-          <p>The call list is {Math.round(data.plan.k / 25)} working days at 25 calls a day.</p>
         </div>
         <ul>
           {LANE_ROWS.map((l) => (

@@ -103,7 +103,7 @@ export default function Pharmacy({ data }) {
       <section className="a-open f-open">
         <div className="a-copy">
           <p className="a-kicker">{ph.store} <span>·</span> synthetic plan, October 1</p>
-          <h1>{ph.reach.counter} members with an open gap will walk into this store in the next 30 days</h1>
+          <h1>{ph.reach.counter} gap members have a refill due at this store in the next 30 days</h1>
           <p className="a-stand">Each one can be flagged before they arrive, so the gap gets raised at pickup.</p>
           <p className="a-why">The store sees the member at pickup whatever plan they are in, and gets paid only for closures the plan's own claims confirm.</p>
         </div>
@@ -136,7 +136,7 @@ export default function Pharmacy({ data }) {
       <section className="a-store f-units">
         <div className="a-sechead">
           <h2>Across the synthetic plan, how {n(ph.planMembersWithGaps)} gap members next meet a pharmacy</h2>
-          <p>Each square is one member. Synthetic claims through September 30. A real plan can count this from its own claims in an afternoon.</p>
+          <p>Each square is one member. Synthetic claims through September 30. A real plan can count this from its own claims.</p>
         </div>
         <figure className="a-fig">
           <Units plan={ph.plan} cols={40} labels />

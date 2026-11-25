@@ -38,6 +38,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 main { flex: 1; }
 .page { max-width: 1280px; margin: 0 auto; padding: 48px 32px 64px; }
 .foot { display: flex; justify-content: space-between; gap: 16px; padding: 16px 32px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+.foot-text { display: flex; flex-direction: column; gap: 4px; }
+.foot-text p { margin: 0; }
 .foot a { color: var(--ink); min-height: 44px; display: inline-flex; align-items: center; }
 
 .hero { max-width: 860px; margin-bottom: 48px; }

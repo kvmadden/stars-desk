@@ -5,7 +5,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = new URL('..', import.meta.url).pathname;
-// Every file under src/ui, including subfolders such as the review directions.
+// Every file under src/ui, subfolders included.
 const walk = (dir) => readdirSync(join(root, dir)).flatMap((f) => (statSync(join(root, dir, f)).isDirectory() ? walk(`${dir}/${f}`) : [`${dir}/${f}`]));
 const files = [
   'README.md',
@@ -18,7 +18,7 @@ const RESULT_CLAIMS = [/\d+(\.\d+)?\s+(members\s+)?per 100 calls/i, /kept\s+\d+(
 describe('no simulated outcome claims', () => {
   it('checks the files it means to check', () => {
     expect(files.length).toBeGreaterThan(6);
-    expect(files).toContain('src/ui/directions/StoreA.jsx');
+    expect(files).toContain('src/ui/Pharmacy.jsx');
   });
   for (const f of files) {
     it(`${f} quotes no simulated result`, () => {

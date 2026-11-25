@@ -6,7 +6,6 @@ import Formulary from './ui/Formulary.jsx';
 import Pilot from './ui/Pilot.jsx';
 import Pharmacy from './ui/Pharmacy.jsx';
 import { dayLabel } from './ui/format.js';
-import { DIRECTION, StoreFor, PlanFor } from './ui/directions/index.js';
 
 const TABS = [
   { key: 'plan', label: 'Plan', short: 'Plan' },
@@ -56,11 +55,11 @@ export default function App() {
         </div>
       </header>
       <main>
-        {tab === 'plan' && React.createElement(PlanFor(DIRECTION) || Plan, { data, go })}
+        {tab === 'plan' && <Plan data={data} go={go} />}
         {tab === 'list' && <SaveList data={data} params={params} go={go} />}
         {tab === 'safety' && <Safety data={data} params={params} />}
         {tab === 'formulary' && <Formulary data={data} params={params} />}
-        {tab === 'pharmacy' && React.createElement(StoreFor(DIRECTION) || Pharmacy, { data, go })}
+        {tab === 'pharmacy' && <Pharmacy data={data} />}
         {(tab === 'pilot' || tab === 'proof') && <Pilot data={data} />}
       </main>
       <footer className="foot">

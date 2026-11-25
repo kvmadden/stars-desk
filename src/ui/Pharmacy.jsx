@@ -1,5 +1,8 @@
+// The store view: one store's next 30 days of gap members at the counter, and how the whole synthetic plan
+// next meets a pharmacy. Synthetic data only.
 import React, { useState } from 'react';
 import { dayLabel } from './format.js';
+import { REACH, n, dayFull, weekday } from './shared.js';
 
 export const ORDER = ['D08', 'D09', 'D10', 'D11', 'D12', 'D13'];
 export const LABEL = { D08: 'Diabetes adherence', D09: 'Blood pressure adherence', D10: 'Statin adherence', D11: 'Statin use in diabetes', D12: 'Opioid with benzodiazepine', D13: 'Two anticholinergics' };
@@ -17,107 +20,160 @@ export const PAYS = [
   { title: 'The plan pays for', lines: ['Closures its own claims confirm, using the CMS rules', 'Adherence: the member ends the year at 80% or higher', 'Statin in diabetes: a statin fill in the measurement year', 'Not for calls, attempts or flags on their own'] },
 ];
 
-export const SEGS = [
-  { key: 'walk-in', label: 'Refill due at a pharmacy counter in the next 30 days', tone: 'gold' },
-  { key: 'store-call', label: 'Use a pharmacy, but overdue or on 90 days', tone: 'slate' },
-  { key: 'mail', label: 'Mail order only', tone: 'quiet' },
-  { key: 'none', label: 'No recent fill', tone: 'quiet' },
-];
+const COLS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-function WalkIn({ plan, total }) {
+// One square per member, filled row by row in reach order.
+export function Units({ plan, cols, cell = 9, gap = 2, labels }) {
+  const order = REACH.flatMap((s) => Array(plan[s.key]).fill(s.tone));
+  const rows = Math.ceil(order.length / cols);
+  const step = cell + gap;
+  const W = cols * step - gap;
+  const H = rows * step - gap;
+  // Where each segment's first and last square sit, for the leader lines.
+  let at = 0;
+  const marks = REACH.map((s) => {
+    const a = at;
+    at += plan[s.key];
+    return { ...s, rowFrom: Math.floor(a / cols), rowTo: Math.floor((at - 1) / cols) };
+  });
+  const walk = marks[0];
+  const call = marks[1];
+  const LW = labels ? 300 : 0;
   return (
-    <figure className="walkin">
-      <div className="wstack" aria-hidden="true">
-        {SEGS.map((s, i) => <span key={s.key} className={s.tone} style={{ flexGrow: plan[s.key], animationDelay: `${150 + i * 120}ms` }} />)}
+    <svg className={labels ? 'a-units wide' : 'a-units narrow'} viewBox={`0 0 ${W + LW} ${H + (labels ? 36 : 0)}`} role="img" aria-label={REACH.map((s) => `${plan[s.key]} ${s.label}`).join('. ')}>
+      {order.map((tone, i) => (
+        <rect key={i} x={(i % cols) * step} y={Math.floor(i / cols) * step} width={cell} height={cell} className={`u ${tone}`} />
+      ))}
+      {labels && (
+        <g className="a-anno">
+          <line x1={W + 8} x2={W + 24} y1={((walk.rowFrom + walk.rowTo) / 2) * step} y2={((walk.rowFrom + walk.rowTo) / 2) * step} />
+          <text x={W + 32} y={((walk.rowFrom + walk.rowTo) / 2) * step - 14} className="big walk">{n(plan['walk-in'])}</text>
+          <text x={W + 32} y={((walk.rowFrom + walk.rowTo) / 2) * step + 12}>have a refill due at a pharmacy</text>
+          <text x={W + 32} y={((walk.rowFrom + walk.rowTo) / 2) * step + 32}>counter in the next 30 days</text>
+          <line x1={W + 8} x2={W + 24} y1={((call.rowFrom + call.rowTo) / 2) * step + 4} y2={((call.rowFrom + call.rowTo) / 2) * step + 4} />
+          <text x={W + 32} y={((call.rowFrom + call.rowTo) / 2) * step + 9}><tspan className="num call">{n(plan['store-call'])}</tspan> use a pharmacy but are</text>
+          <text x={W + 32} y={((call.rowFrom + call.rowTo) / 2) * step + 29}>overdue or on 90-day fills</text>
+          <text x={W + 32} y={H + 30}><tspan className="num">{n(plan.mail + plan.none)}</tspan> mail order only or no recent fill</text>
+        </g>
+      )}
+    </svg>
+  );
+}
+
+// The counter window as a month calendar. Darker days have more gap members due. This week's days can be picked.
+export function Calendar({ month, week, day, setDay, asOf }) {
+  const most = Math.max(1, ...month.map((d) => d.count));
+  const lead = (weekday(month[0].day) + 6) % 7; // Monday first
+  const cells = [...Array(lead).fill(null), ...month];
+  while (cells.length % 7) cells.push(null);
+  const pickable = new Set(week.map((w) => w.day));
+  return (
+    <div className="c-cal">
+      <div className="c-calhead">{COLS.map((c) => <span key={c}>{c}</span>)}</div>
+      <div className="c-calgrid">
+        {cells.map((d, i) => {
+          if (!d) return <span key={i} className="c-cell empty" />;
+          const shade = d.count ? 0.12 + (0.88 * d.count) / most : 0;
+          const dark = shade > 0.55;
+          const inner = (
+            <>
+              <span className="c-date">{d.day === asOf ? 'Today' : dayLabel(d.day)}</span>
+              <span className="c-n num">{d.count || ''}</span>
+            </>
+          );
+          const style = { '--shade': shade };
+          return pickable.has(d.day) ? (
+            <button key={i} className={`c-cell pick${dark ? ' dark' : ''}${d.day === day ? ' on' : ''}`} style={style} onClick={() => setDay(d.day)} aria-pressed={d.day === day} aria-label={`${dayLabel(d.day)}: ${d.count} gap members due`}>{inner}</button>
+          ) : (
+            <span key={i} className={`c-cell${dark ? ' dark' : ''}`} style={style}>{inner}</span>
+          );
+        })}
       </div>
-      <ul className="wlegend">
-        {SEGS.map((s) => (
-          <li key={s.key} className={s.tone}>
-            <span className="mono">{plan[s.key].toLocaleString()}</span>
-            <span>{s.label}</span>
-          </li>
-        ))}
-      </ul>
-      <figcaption className="sub">All {total.toLocaleString()} members of the synthetic plan with an open adherence or safety gap on October 1. A real plan can count this from its own claims in an afternoon.</figcaption>
-    </figure>
+    </div>
   );
 }
 
 export default function Pharmacy({ data }) {
   const ph = data.pharmacy;
   const asOf = data.plan.asOf;
-  const week = ph.week;
-  const [day, setDay] = useState(week[0]?.day);
-  const most = Math.max(1, ...week.map((w) => w.count));
-  const picked = week.find((w) => w.day === day);
-  const pct = Math.round((100 * ph.plan['walk-in']) / ph.planMembersWithGaps);
+  const [day, setDay] = useState(ph.week[0]?.day);
+  const picked = ph.week.find((w) => w.day === day);
   return (
-    <div className="page pharmacy">
-      <section className="phlead">
-        <p className="eyebrow">For a pharmacy selling to any plan</p>
-        <h1>Before a plan pays to phone its gap list, it should count who is <span className="hl">about to walk into a pharmacy</span> anyway.</h1>
-        <p className="walkhead"><span className="mono">{pct}%</span> in this synthetic plan. The pickup is the outreach.</p>
-        <WalkIn plan={ph.plan} total={ph.planMembersWithGaps} />
-        <p className="lede">One national pharmacy chain plans to split its stores off from its insurer and benefit manager (<a href="https://www.pharmacytimes.com/view/cvs-health-to-split-into-2-public-companies-separating-retail-and-specialty-pharmacy" target="_blank" rel="noreferrer">Pharmacy Times, Nov 4, 2026</a>), so they would sell to every plan, not one parent. What a store sells: flag the member before they arrive, close the gap in the pickup conversation, and get paid only for gaps the plan's own claims show closed.</p>
+    <div className="page store">
+      <section className="a-open f-open">
+        <div className="a-copy">
+          <p className="a-kicker">{ph.store} <span>·</span> synthetic plan, October 1</p>
+          <h1>{ph.reach.counter} members with an open gap will walk into this store in the next 30 days</h1>
+          <p className="a-stand">Each one is flagged before they arrive, and the gap is closed in the pickup conversation rather than on a phone list.</p>
+          <p className="a-why">The store sees the member at pickup whatever plan they are in, and gets paid only for closures the plan's own claims confirm.</p>
+        </div>
+        <figure className="a-fig f-cal">
+          <figcaption>
+            <strong>Refills due at {ph.store} from members with an open gap, next 30 days</strong>
+            <span>Darker days have more due. Pick a day this week to see who is coming in.</span>
+          </figcaption>
+          <Calendar month={ph.month || []} week={ph.week} day={day} setDay={setDay} asOf={asOf} />
+        </figure>
       </section>
 
-      <section className="weekview">
-        <h2>What that looks like at one store: {ph.store}, the next 7 days</h2>
-        <p className="sub">{ph.reach.counter} of the plan's gap members have a refill due here in the next 30 days. Each is flagged before they arrive.</p>
-        <div className="weekstrip" role="tablist" aria-label="Pickups by day">
-          {week.map((w) => (
-            <button key={w.day} role="tab" aria-selected={w.day === day} className={w.day === day ? 'wday on' : 'wday'} onClick={() => setDay(w.day)}>
-              <span className="wbar"><i style={{ height: `${(100 * w.count) / most}%` }} /></span>
-              <span className="mono">{w.count}</span>
-              <span className="sub">{w.day === asOf ? 'Today' : dayLabel(w.day)}</span>
-            </button>
+      {picked && (
+        <section className="a-store f-day">
+          <table className="a-pickups">
+            <caption>{dayFull(picked.day, asOf)}: {picked.count} gap members due to pick up</caption>
+            <tbody>
+              {picked.rows.map((r) => (
+                <tr key={r.id}>
+                  <th scope="row"><strong>{r.name}</strong><span>Picking up {r.drug}</span></th>
+                  <td>{r.actions.map((a) => <p key={a.measure}><span>{a.label}</span>{a.action}</p>)}</td>
+                </tr>
+              ))}
+            </tbody>
+            {picked.count > picked.rows.length && <tfoot><tr><td colSpan="2">and {picked.count - picked.rows.length} more that day</td></tr></tfoot>}
+          </table>
+        </section>
+      )}
+
+      <section className="a-store f-units">
+        <div className="a-sechead">
+          <h2>Across the synthetic plan, how {n(ph.planMembersWithGaps)} gap members next meet a pharmacy</h2>
+          <p>Each square is one member. Synthetic claims through September 30. A real plan can count this from its own claims in an afternoon.</p>
+        </div>
+        <figure className="a-fig">
+          <Units plan={ph.plan} cols={40} labels />
+          <Units plan={ph.plan} cols={34} />
+          <ul className="a-narrowkey">
+            {REACH.map((s) => (
+              <li key={s.key} className={s.tone}><i /><span className="num">{n(ph.plan[s.key])}</span> {s.label}</li>
+            ))}
+          </ul>
+        </figure>
+      </section>
+
+      <section className="a-deal">
+        <h2>The deal a store offers a plan</h2>
+        <div className="a-cols">
+          {PAYS.map((c) => (
+            <div key={c.title}>
+              <h3>{c.title}</h3>
+              <ul>{c.lines.map((l) => <li key={l}>{l}</li>)}</ul>
+            </div>
           ))}
         </div>
-        {picked && (
-          <ul className="pickups" key={picked.day}>
-            {picked.rows.map((r) => (
-              <li key={r.id}>
-                <span className="pwho"><strong>{r.name}</strong><span className="sub">Picking up {r.drug}</span></span>
-                <span className="pacts">{r.actions.map((a) => <span key={a.measure} className="pact"><b>{a.label}</b>{a.action}</span>)}</span>
-              </li>
-            ))}
-            {picked.count > picked.rows.length && <li className="sub more">and {picked.count - picked.rows.length} more that day</li>}
-          </ul>
-        )}
       </section>
 
-      <section className="pcards three">
-        {PAYS.map((c) => (
-          <article key={c.title} className="mcard">
-            <h3>{c.title}</h3>
-            <ul className="plist">{c.lines.map((l) => <li key={l}>{l}</li>)}</ul>
-          </article>
-        ))}
-      </section>
-
-      <details className="board bymeasure">
-        <summary><h2>By measure: who one store can reach</h2></summary>
-        <p className="boardsub">Counter means a refill at {ph.store} falls due in the next 30 days. Phone means they fill there but are overdue or not due this month.</p>
-        <table className="reach">
-          <thead><tr><th>Gap</th><th className="num">At the counter</th><th className="num">By phone</th><th className="num">Elsewhere</th><th>What the store does</th></tr></thead>
+      <details className="a-more">
+        <summary>By measure: who one store can reach</summary>
+        <table className="a-reach">
+          <thead><tr><th>Gap</th><th className="r">Counter</th><th className="r">Phone</th><th className="r">Elsewhere</th><th>What the store does</th></tr></thead>
           <tbody>
             {ORDER.filter((m) => ph.byGap[m]).map((m) => {
               const g = ph.byGap[m];
-              const tot = g.counter + g.phone + g.elsewhere;
-              return (
-                <tr key={m}>
-                  <th scope="row">{LABEL[m]}<span className="rbar"><i style={{ width: `${(100 * g.counter) / tot}%` }} /></span></th>
-                  <td className="num mono">{g.counter}</td>
-                  <td className="num mono">{g.phone}</td>
-                  <td className="num mono muted">{g.elsewhere}</td>
-                  <td>{AT_COUNTER[m]}</td>
-                </tr>
-              );
+              return <tr key={m}><th scope="row">{LABEL[m]}</th><td className="r num" data-k="counter">{g.counter}</td><td className="r num" data-k="phone">{g.phone}</td><td className="r num q" data-k="elsewhere">{g.elsewhere}</td><td>{AT_COUNTER[m]}</td></tr>;
             })}
           </tbody>
         </table>
       </details>
-      <p className="note">Prove it the same way as the call list: randomize gap members into the counter flag or the plan's usual outreach, and compare closures on the plan's claims at year end. No outcome claim before that.</p>
+      <p className="a-note">Prove it the same way as the call list: randomize gap members into the counter flag or the plan's usual outreach, and compare closures on the plan's claims at year end. No outcome claim before that.</p>
     </div>
   );
 }
